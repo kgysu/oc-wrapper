@@ -1,0 +1,16 @@
+package: github.com/kgysu/oc-wrapper
+import:
+- package: github.com/openshift/client-go
+  subpackages:
+  - apps/clientset/versioned/typed/apps/v1
+- package: k8s.io/api
+  subpackages:
+  - core/v1
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/apis/meta/v1
+- package: k8s.io/client-go
+  subpackages:
+  - kubernetes/typed/core/v1
+  - rest
+  - tools/clientcmd

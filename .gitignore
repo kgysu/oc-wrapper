@@ -1,0 +1,11 @@
+/workspace.xml
+
+.idea
+.project
+.classpath
+.c9/
+*.launch
+*.sublime-workspace
+*.iml
+
+vendor
