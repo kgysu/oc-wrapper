@@ -1,0 +1,2 @@
+# Openshift client - go wrapper
+
