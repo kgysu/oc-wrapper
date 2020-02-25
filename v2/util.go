@@ -2,51 +2,16 @@ package v2
 
 import (
 	"encoding/json"
+	"fmt"
 	appsv1client "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"
-	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	routev1client "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/typed/apps/v1"
+	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
+	rbacv1client "k8s.io/client-go/kubernetes/typed/rbac/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
-
-// List
-
-func ListAllFromRemote(namespace string) ([]OpenshiftItem, error) {
-	kubeClient, err := GetKubeAppsV1Client()
-	if err != nil {
-		return nil, err
-	}
-	appsClient, err := GetAppsV1Client()
-	if err != nil {
-		return nil, err
-	}
-	var results []OpenshiftItem
-	dcs, err := kubeClient.Deployments(namespace).List(v12.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-	for _, dc := range dcs.Items {
-		results = append(results, New(dc.Name, dc.Kind, dc.String()))
-	}
-	statefulSets, err := kubeClient.StatefulSets(namespace).List(v12.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-	for _, ss := range statefulSets.Items {
-		results = append(results, New(ss.Name, ss.Kind, ss.String()))
-	}
-	replicaSets, err := kubeClient.ReplicaSets(namespace).List(v12.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-	for _, rs := range replicaSets.Items {
-		results = append(results, New(rs.Name, rs.Kind, rs.String()))
-	}
-	return results, nil
-}
-
-// Util
 
 func GetKubeAppsV1Client() (v1.AppsV1Interface, error) {
 	clientSet, err := GetKubeClientSet()
@@ -62,6 +27,42 @@ func GetAppsV1Client() (*appsv1client.AppsV1Client, error) {
 		return nil, err
 	}
 	client, err := appsv1client.NewForConfig(restConfig)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
+func GetCoreV1Client() (*corev1client.CoreV1Client, error) {
+	restConfig, err := GetConfigs()
+	if err != nil {
+		return nil, err
+	}
+	client, err := corev1client.NewForConfig(restConfig)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
+func GetRouteV1Client() (*routev1client.RouteV1Client, error) {
+	restConfig, err := GetConfigs()
+	if err != nil {
+		return nil, err
+	}
+	client, err := routev1client.NewForConfig(restConfig)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
+func GetRbacV1Client() (*rbacv1client.RbacV1Client, error) {
+	restConfig, err := GetConfigs()
+	if err != nil {
+		return nil, err
+	}
+	client, err := rbacv1client.NewForConfig(restConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +97,13 @@ func GetKubeClientSet() (*kubernetes.Clientset, error) {
 	return clientset, nil
 }
 
-// json
+// Other
+
+func onlyLogOnError(err error) {
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+}
 
 func ParseJsonString(jsonContent string, v interface{}) error {
 	return json.Unmarshal([]byte(jsonContent), v)

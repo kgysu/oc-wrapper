@@ -8,8 +8,16 @@ type OpenshiftItem struct {
 	itemJson string
 }
 
-func New(name string, kind string, data string) OpenshiftItem {
+func NewOpenshiftItem(name string, kind string, data string) OpenshiftItem {
 	return OpenshiftItem{
+		name:     name,
+		kind:     kind,
+		itemJson: data,
+	}
+}
+
+func NewOpenshiftItemR(name string, kind string, data string) *OpenshiftItem {
+	return &OpenshiftItem{
 		name:     name,
 		kind:     kind,
 		itemJson: data,
@@ -34,7 +42,7 @@ func (oi OpenshiftItem) ParseTo(v interface{}) error {
 	return json.Unmarshal([]byte(oi.itemJson), v)
 }
 
-func (oi OpenshiftItem) ParseFrom(v interface{}) error {
+func (oi OpenshiftItem) SetJsonDataFrom(v interface{}) error {
 	marshalled, err := json.Marshal(v)
 	if err != nil {
 		return err
