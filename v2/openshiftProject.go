@@ -1,6 +1,7 @@
 package v2
 
 import (
+	"fmt"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,9 +29,11 @@ func NewFromLocal(namespace string, folderPath string, debug bool) (*OpenshiftPr
 		return nil, err
 	}
 
-	remoteItems, err := ListAllLocalItems(namespace, folderPath, debug)
-	if err != nil {
-		return nil, err
+	remoteItems, errs := ListAllLocalItems(namespace, folderPath, debug)
+	if len(errs) > 0 {
+		for _, err := range errs {
+			fmt.Println(err.Error())
+		}
 	}
 	return &OpenshiftProject{
 		name:      localProject.Name,
