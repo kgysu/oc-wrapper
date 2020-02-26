@@ -38,7 +38,7 @@ func ScaleDeploymentConfigsAndStatefulSets(namespace string, items []OpenshiftIt
 
 func scaleDeploymentConfig(namespace string, replicas int, appsClient *v14.AppsV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) error {
 	var realItem v1.DeploymentConfig
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func scaleDeploymentConfig(namespace string, replicas int, appsClient *v14.AppsV
 
 func scaleStatefulSet(namespace string, replicas int, appsClient v15.AppsV1Interface, item OpenshiftItem, resultItems *[]OpenshiftItem) error {
 	var realItem v12.StatefulSet
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		return err
 	}

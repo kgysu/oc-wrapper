@@ -75,7 +75,7 @@ func UpdateAllItemsRemote(namespace string, items []OpenshiftItem) ([]OpenshiftI
 // DeploymentConfig
 func updateDeploymentConfigItem(item OpenshiftItem, namespace string, appsClient *v12.AppsV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v1.DeploymentConfig
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -84,7 +84,7 @@ func updateDeploymentConfigItem(item OpenshiftItem, namespace string, appsClient
 }
 func updateDeploymentConfigFromRemote(fromRemote *v1.DeploymentConfig, item OpenshiftItem, namespace string, appsClient *v12.AppsV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v1.DeploymentConfig
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -110,7 +110,7 @@ func updateDeploymentConfig(realItem *v1.DeploymentConfig, namespace string, app
 // StatefulSet
 func updateStatefulSetItem(item OpenshiftItem, namespace string, appsClient v14.AppsV1Interface, resultItems *[]OpenshiftItem) {
 	var realItem v13.StatefulSet
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -119,7 +119,7 @@ func updateStatefulSetItem(item OpenshiftItem, namespace string, appsClient v14.
 }
 func updateStatefulSetFromRemote(fromRemote *v13.StatefulSet, item OpenshiftItem, namespace string, appsClient v14.AppsV1Interface, resultItems *[]OpenshiftItem) {
 	var realItem v13.StatefulSet
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -145,7 +145,7 @@ func updateStatefulSet(realItem *v13.StatefulSet, namespace string, appsClient v
 // Service
 func updateServiceItem(item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.Service
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -154,7 +154,7 @@ func updateServiceItem(item OpenshiftItem, namespace string, client *v16.CoreV1C
 }
 func updateServiceFromRemote(fromRemote *v15.Service, item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.Service
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -180,7 +180,7 @@ func updateService(realItem *v15.Service, namespace string, client *v16.CoreV1Cl
 // ServiceAccount
 func updateServiceAccountItem(item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.ServiceAccount
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -189,7 +189,7 @@ func updateServiceAccountItem(item OpenshiftItem, namespace string, client *v16.
 }
 func updateServiceAccountFromRemote(fromRemote *v15.ServiceAccount, item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.ServiceAccount
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -215,7 +215,7 @@ func updateServiceAccount(realItem *v15.ServiceAccount, namespace string, client
 // Secret
 func updateSecretItem(item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.Secret
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -224,7 +224,7 @@ func updateSecretItem(item OpenshiftItem, namespace string, client *v16.CoreV1Cl
 }
 func updateSecretFromRemote(fromRemote *v15.Secret, item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.Secret
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -250,7 +250,7 @@ func updateSecret(realItem *v15.Secret, namespace string, client *v16.CoreV1Clie
 // ConfigMap
 func updateConfigMapItem(item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.ConfigMap
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -259,7 +259,7 @@ func updateConfigMapItem(item OpenshiftItem, namespace string, client *v16.CoreV
 }
 func updateConfigMapFromRemote(fromRemote *v15.ConfigMap, item OpenshiftItem, namespace string, client *v16.CoreV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v15.ConfigMap
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -285,7 +285,7 @@ func updateConfigMap(realItem *v15.ConfigMap, namespace string, client *v16.Core
 // Route
 func updateRouteItem(item OpenshiftItem, namespace string, client *v18.RouteV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v17.Route
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -294,7 +294,7 @@ func updateRouteItem(item OpenshiftItem, namespace string, client *v18.RouteV1Cl
 }
 func updateRouteFromRemote(fromRemote *v17.Route, item OpenshiftItem, namespace string, client *v18.RouteV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v17.Route
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -320,7 +320,7 @@ func updateRoute(realItem *v17.Route, namespace string, client *v18.RouteV1Clien
 // Role
 func updateRoleItem(item OpenshiftItem, namespace string, client *v110.RbacV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v19.Role
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -329,7 +329,7 @@ func updateRoleItem(item OpenshiftItem, namespace string, client *v110.RbacV1Cli
 }
 func updateRoleFromRemote(fromRemote *v19.Role, item OpenshiftItem, namespace string, client *v110.RbacV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v19.Role
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -355,7 +355,7 @@ func updateRole(realItem *v19.Role, namespace string, client *v110.RbacV1Client,
 // RoleBinding
 func updateRoleBindingItem(item OpenshiftItem, namespace string, client *v110.RbacV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v19.RoleBinding
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -364,7 +364,7 @@ func updateRoleBindingItem(item OpenshiftItem, namespace string, client *v110.Rb
 }
 func updateRoleBindingFromRemote(fromRemote *v19.RoleBinding, item OpenshiftItem, namespace string, client *v110.RbacV1Client, resultItems *[]OpenshiftItem) {
 	var realItem v19.RoleBinding
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return

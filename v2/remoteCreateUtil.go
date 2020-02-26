@@ -39,7 +39,7 @@ func CreateAllItemsRemote(namespace string, items []OpenshiftItem) ([]OpenshiftI
 	var resultItems []OpenshiftItem
 
 	for _, item := range items {
-		fmt.Printf("Create %s: %s", item.kind, item.name)
+		fmt.Printf("Create %s: %s \n", item.kind, item.name)
 		if item.kind == DeploymentConfigKey {
 			createDeploymentConfig(namespace, appsClient, item, &resultItems)
 		}
@@ -74,7 +74,7 @@ func CreateAllItemsRemote(namespace string, items []OpenshiftItem) ([]OpenshiftI
 
 func createDeploymentConfig(namespace string, client *v12.AppsV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v1.DeploymentConfig
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -89,7 +89,7 @@ func createDeploymentConfig(namespace string, client *v12.AppsV1Client, item Ope
 
 func createStatefulSet(namespace string, client v14.AppsV1Interface, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v15.StatefulSet
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -104,7 +104,7 @@ func createStatefulSet(namespace string, client v14.AppsV1Interface, item Opensh
 
 func createService(namespace string, client *v13.CoreV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v16.Service
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -119,7 +119,7 @@ func createService(namespace string, client *v13.CoreV1Client, item OpenshiftIte
 
 func createServiceAccount(namespace string, client *v13.CoreV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v16.ServiceAccount
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -134,7 +134,7 @@ func createServiceAccount(namespace string, client *v13.CoreV1Client, item Opens
 
 func createSecret(namespace string, client *v13.CoreV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v16.Secret
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -149,7 +149,7 @@ func createSecret(namespace string, client *v13.CoreV1Client, item OpenshiftItem
 
 func createConfigMap(namespace string, client *v13.CoreV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v16.ConfigMap
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -164,7 +164,7 @@ func createConfigMap(namespace string, client *v13.CoreV1Client, item OpenshiftI
 
 func createRoute(namespace string, client *v17.RouteV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v18.Route
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -179,7 +179,7 @@ func createRoute(namespace string, client *v17.RouteV1Client, item OpenshiftItem
 
 func createRole(namespace string, client *rbacv1client.RbacV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v19.Role
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
@@ -194,7 +194,7 @@ func createRole(namespace string, client *rbacv1client.RbacV1Client, item Opensh
 
 func createRoleBinding(namespace string, client *rbacv1client.RbacV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
 	var realItem v19.RoleBinding
-	err := item.ParseTo(realItem)
+	err := item.ParseTo(&realItem)
 	if err != nil {
 		onlyLogOnError(err)
 		return
