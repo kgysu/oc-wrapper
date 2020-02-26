@@ -8,6 +8,7 @@ import (
 	v12 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
 	rbacv1client "k8s.io/client-go/kubernetes/typed/rbac/v1"
+	"sort"
 )
 
 // List
@@ -34,6 +35,7 @@ func CreateOrUpdateAllRemoteItems(namespace string, items []OpenshiftItem) ([]Op
 	}
 	var resultItems []OpenshiftItem
 
+	sort.Sort(ByKind(items))
 	for _, item := range items {
 		fmt.Printf("Update %s: %s \n", item.kind, item.name)
 		if item.kind == DeploymentConfigKey {

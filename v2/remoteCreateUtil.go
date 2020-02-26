@@ -12,6 +12,7 @@ import (
 	v14 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	v13 "k8s.io/client-go/kubernetes/typed/core/v1"
 	rbacv1client "k8s.io/client-go/kubernetes/typed/rbac/v1"
+	"sort"
 )
 
 // Create
@@ -38,6 +39,7 @@ func CreateAllItemsRemote(namespace string, items []OpenshiftItem) ([]OpenshiftI
 	}
 	var resultItems []OpenshiftItem
 
+	sort.Sort(ByKind(items))
 	for _, item := range items {
 		fmt.Printf("Create %s: %s \n", item.kind, item.name)
 		if item.kind == DeploymentConfigKey {
@@ -205,4 +207,8 @@ func createRoleBinding(namespace string, client *rbacv1client.RbacV1Client, item
 		return
 	}
 	*resultItems = append(*resultItems, NewOpenshiftItem(created.Name, RouteKey, created.String()))
+}
+
+func sortItems(a OpenshiftItem, b OpenshiftItem) bool {
+	return true
 }
