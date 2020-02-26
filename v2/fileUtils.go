@@ -16,6 +16,7 @@ const EnvFileSuffix = ".env"
 const ProjectSettingsFileName = "project" + JsonFileSuffix
 const ConfigMapDataFolder = "config"
 const EnvVarPrefix = "$"
+const CommentLinePrefix = "#"
 
 type ThisProjectMeta struct {
 	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
@@ -40,7 +41,7 @@ func parseFileAndReplaceEnvVars(filePath string, envs map[string]string, v inter
 		return err
 	}
 	if debug { // debug is an user requirement here
-		fmt.Printf("ItemResult: [%v] \n", dataAsString)
+		fmt.Printf("ItemResult: [%s] \n", dataAsString)
 	}
 	err = json.Unmarshal([]byte(dataAsString), &v)
 	if err != nil {
@@ -50,7 +51,7 @@ func parseFileAndReplaceEnvVars(filePath string, envs map[string]string, v inter
 }
 
 func parseConfigMap(filePath string, folderPath string, namespace string, envs map[string]string, cm *v1.ConfigMap, debug bool) error {
-	dataAsString, err := readFileAsString(filePath)
+	dataAsString, err := readFileAndReplaceEnvs(filePath, envs)
 	if err != nil {
 		return err
 	}
@@ -60,43 +61,42 @@ func parseConfigMap(filePath string, folderPath string, namespace string, envs m
 	}
 	// Only use files in /config if Data section is empty
 	if len(cm.Data) == 0 {
-		fmt.Println("Data ist empty")
 		configMapData, err := getConfigMapDataByNamespace(folderPath, namespace, envs, debug)
 		if err != nil {
 			return err
 		}
 		cm.Data = configMapData
 	}
-
 	if debug { // debug is an user requirement here
+		fmt.Println("Result ConfigMapData:")
 		for key, val := range cm.Data {
-			fmt.Printf("key=[%s], val=[%s]", key, val)
+			fmt.Printf("key=[%s], val=[%s] \n", key, val)
 		}
+		fmt.Println()
 	}
 	return nil
 }
 
 func getConfigMapDataByNamespace(folder string, namespace string, envs map[string]string, debug bool) (map[string]string, error) {
 	configMapData := make(map[string]string)
-	folderPath := folder + "/" + ConfigMapDataFolder + "/" + namespace
+	folderPath := filepath.FromSlash(folder + "/" + ConfigMapDataFolder + "/" + namespace + "/")
 	// Load all config files in <folder>/<config>/<namespace>/*
-	files, err := filePathWalkDir(folderPath)
-	if err != nil {
-		return nil, err
-	}
-	for _, file := range files {
-		fmt.Println(file)
-		fileDataAsString, err := readFileAndReplaceEnvs(file, envs)
+	if _, err := os.Stat(folderPath); !os.IsNotExist(err) {
+		files, err := filePathWalkDir(folderPath)
 		if err != nil {
-			onlyLogOnError(err)
-			continue
+			return nil, err
 		}
-		fileName := strings.Replace(file, folderPath+"/", "", 1)
-		configMapData[fileName] = fileDataAsString
-	}
-	if debug {
-		for key, val := range configMapData {
-			fmt.Printf("key=[%s], val=[%s] \n", key, val)
+		for _, file := range files {
+			fileDataAsString, err := readFileAndReplaceEnvs(file, envs)
+			if err != nil {
+				onlyLogOnError(err)
+				continue
+			}
+			fileName := strings.Replace(file, folderPath, "", 1)
+			configMapData[fileName] = fileDataAsString
+			if debug {
+				fmt.Printf("File used for ConfigMapData: %s \n", fileName)
+			}
 		}
 	}
 	return configMapData, nil
@@ -142,11 +142,11 @@ func loadEnvsByNamespace(namespace string, envFiles []string, debug bool) (map[s
 			scanner := bufio.NewScanner(envData)
 			for scanner.Scan() {
 				text := scanner.Text()
-				if !(strings.HasPrefix(text, "#")) {
+				if !(strings.HasPrefix(text, CommentLinePrefix)) {
 					splittedEnv := strings.SplitN(text, "=", 2)
 					if len(splittedEnv) == 2 {
 						if debug {
-							fmt.Printf("Found: %s=%s \n", splittedEnv[0], splittedEnv[1])
+							fmt.Printf("Found Env: %s=%s \n", splittedEnv[0], splittedEnv[1])
 						}
 						currentEnvs[splittedEnv[0]] = splittedEnv[1]
 					}
