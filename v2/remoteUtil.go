@@ -108,7 +108,6 @@ func ListAllRemoteItems(namespace string, types string, options v13.ListOptions)
 	if strings.Contains(types, StatefulSetKey) {
 		appendStatefulSets(&resultItems, kubeClient, namespace, options)
 	}
-
 	if strings.Contains(types, EventKey) {
 		appendEvents(&resultItems, coreClient, namespace, options)
 	}
@@ -130,25 +129,21 @@ func ListAllRemoteItems(namespace string, types string, options v13.ListOptions)
 	if strings.Contains(types, ServiceAccountKey) {
 		appendServiceAccounts(&resultItems, coreClient, namespace, options)
 	}
-
 	if strings.Contains(types, PvClaimKey) {
 		appendPersistentVolumeClaims(&resultItems, coreClient, namespace, options)
 	}
 	if strings.Contains(types, PvKey) {
 		appendPersistentVolumes(&resultItems, coreClient, options)
 	}
-
 	if strings.Contains(types, RouteKey) {
 		appendRoutes(&resultItems, routeClient, namespace, options)
 	}
-
 	if strings.Contains(types, RoleKey) {
 		appendRoles(&resultItems, rbacClient, namespace, options)
 	}
 	if strings.Contains(types, RoleBindingKey) {
 		appendRoleBindings(&resultItems, rbacClient, namespace, options)
 	}
-
 	return resultItems, nil
 }
 

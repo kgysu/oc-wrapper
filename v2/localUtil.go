@@ -38,10 +38,15 @@ func ListAllLocalItems(namespace string, folderPath string, debug bool) ([]Opens
 			err = parseConfigMap(filePath, folderPath, namespace, envs, &local, debug)
 			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, ConfigMapKey, marshalltoString(local, &errs)))
 		}
-		if hasSuffixIgnoreCaseAndMinus(filePath, DeploymentConfigKey+JsonFileSuffix) {
-			local := v1.DeploymentConfig{}
+		if hasSuffixIgnoreCaseAndMinus(filePath, SecretKey+JsonFileSuffix) {
+			local := v12.Secret{}
 			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
-			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, DeploymentConfigKey, marshalltoString(local, &errs)))
+			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, SecretKey, marshalltoString(local, &errs)))
+		}
+		if hasSuffixIgnoreCaseAndMinus(filePath, ServiceAccountKey+JsonFileSuffix) {
+			local := v12.ServiceAccount{}
+			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
+			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, ServiceAccountKey, marshalltoString(local, &errs)))
 		}
 		if hasSuffixIgnoreCaseAndMinus(filePath, RoleKey+JsonFileSuffix) {
 			local := v14.Role{}
@@ -53,30 +58,25 @@ func ListAllLocalItems(namespace string, folderPath string, debug bool) ([]Opens
 			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
 			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, RoleBindingKey, marshalltoString(local, &errs)))
 		}
-		if hasSuffixIgnoreCaseAndMinus(filePath, RouteKey+JsonFileSuffix) {
-			local := v15.Route{}
+		if hasSuffixIgnoreCaseAndMinus(filePath, DeploymentConfigKey+JsonFileSuffix) {
+			local := v1.DeploymentConfig{}
 			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
-			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, RouteKey, marshalltoString(local, &errs)))
+			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, DeploymentConfigKey, marshalltoString(local, &errs)))
 		}
-		if hasSuffixIgnoreCaseAndMinus(filePath, SecretKey+JsonFileSuffix) {
-			local := v12.Secret{}
+		if hasSuffixIgnoreCaseAndMinus(filePath, StatefulSetKey+JsonFileSuffix) {
+			local := v1beta1.StatefulSet{}
 			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
-			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, SecretKey, marshalltoString(local, &errs)))
+			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, StatefulSetKey, marshalltoString(local, &errs)))
 		}
 		if hasSuffixIgnoreCaseAndMinus(filePath, ServiceKey+JsonFileSuffix) {
 			local := v12.Service{}
 			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
 			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, ServiceKey, marshalltoString(local, &errs)))
 		}
-		if hasSuffixIgnoreCaseAndMinus(filePath, ServiceAccountKey+JsonFileSuffix) {
-			local := v12.ServiceAccount{}
+		if hasSuffixIgnoreCaseAndMinus(filePath, RouteKey+JsonFileSuffix) {
+			local := v15.Route{}
 			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
-			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, ServiceAccountKey, marshalltoString(local, &errs)))
-		}
-		if hasSuffixIgnoreCaseAndMinus(filePath, StatefulSetKey+JsonFileSuffix) {
-			local := v1beta1.StatefulSet{}
-			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
-			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, StatefulSetKey, marshalltoString(local, &errs)))
+			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, RouteKey, marshalltoString(local, &errs)))
 		}
 	}
 	return items, errs

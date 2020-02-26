@@ -35,7 +35,7 @@ func CreateOrUpdateAllRemoteItems(namespace string, items []OpenshiftItem) ([]Op
 	var resultItems []OpenshiftItem
 
 	for _, item := range items {
-		fmt.Printf("Update %s: %s", item.kind, item.name)
+		fmt.Printf("Update %s: %s \n", item.kind, item.name)
 		if item.kind == DeploymentConfigKey {
 			createOrUpdateDeploymentConfig(namespace, appsClient, item, &resultItems)
 		}

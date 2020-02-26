@@ -34,7 +34,7 @@ func DeleteAllRemoteItems(namespace string, items []OpenshiftItem, options v13.D
 	}
 
 	for _, item := range items {
-		fmt.Printf("Delete %s: %s", item.kind, item.name)
+		fmt.Printf("Delete %s: %s \n", item.kind, item.name)
 		if item.kind == DeploymentConfigKey {
 			onlyLogOnError(deleteDeploymentConfig(namespace, appsClient, item, options))
 		}
