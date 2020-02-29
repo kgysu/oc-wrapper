@@ -69,6 +69,12 @@ func CreateAllItemsRemote(namespace string, items []OpenshiftItem) ([]OpenshiftI
 		if item.kind == RoleBindingKey {
 			createRoleBinding(namespace, rbacClient, item, &resultItems)
 		}
+		if item.kind == PvKey {
+			createPersistentVolume(namespace, coreClient, item, &resultItems)
+		}
+		if item.kind == PvClaimKey {
+			createPersistentVolumeClaim(namespace, coreClient, item, &resultItems)
+		}
 	}
 
 	return resultItems, nil
@@ -209,6 +215,34 @@ func createRoleBinding(namespace string, client *rbacv1client.RbacV1Client, item
 	*resultItems = append(*resultItems, NewOpenshiftItem(created.Name, RouteKey, created.String()))
 }
 
-func sortItems(a OpenshiftItem, b OpenshiftItem) bool {
-	return true
+func createPersistentVolume(namespace string, client *v13.CoreV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
+	var realItem v16.PersistentVolume
+	err := item.ParseTo(&realItem)
+	if err != nil {
+		onlyLogOnError(err)
+		return
+	}
+
+	created, err := client.PersistentVolumes().Create(&realItem)
+	if err != nil {
+		onlyLogOnError(err)
+		return
+	}
+	*resultItems = append(*resultItems, NewOpenshiftItem(created.Name, PvKey, created.String()))
+}
+
+func createPersistentVolumeClaim(namespace string, client *v13.CoreV1Client, item OpenshiftItem, resultItems *[]OpenshiftItem) {
+	var realItem v16.PersistentVolumeClaim
+	err := item.ParseTo(&realItem)
+	if err != nil {
+		onlyLogOnError(err)
+		return
+	}
+
+	created, err := client.PersistentVolumeClaims(namespace).Create(&realItem)
+	if err != nil {
+		onlyLogOnError(err)
+		return
+	}
+	*resultItems = append(*resultItems, NewOpenshiftItem(created.Name, PvClaimKey, created.String()))
 }

@@ -63,6 +63,12 @@ func DeleteAllRemoteItems(namespace string, items []OpenshiftItem, options v13.D
 		if item.kind == RoleBindingKey {
 			onlyLogOnError(deleteRoleBinding(namespace, rbacClient, item, options))
 		}
+		if item.kind == PvKey {
+			onlyLogOnError(deletePersistentVolume(namespace, coreClient, item, options))
+		}
+		if item.kind == PvClaimKey {
+			onlyLogOnError(deletePersistentVolumeClaim(namespace, coreClient, item, options))
+		}
 	}
 	return nil
 }
@@ -89,6 +95,14 @@ func deleteSecret(namespace string, client *corev1client.CoreV1Client, item Open
 
 func deleteConfigMap(namespace string, client *corev1client.CoreV1Client, item OpenshiftItem, options v13.DeleteOptions) error {
 	return client.ConfigMaps(namespace).Delete(item.name, &options)
+}
+
+func deletePersistentVolume(namespace string, client *corev1client.CoreV1Client, item OpenshiftItem, options v13.DeleteOptions) error {
+	return client.PersistentVolumes().Delete(item.name, &options)
+}
+
+func deletePersistentVolumeClaim(namespace string, client *corev1client.CoreV1Client, item OpenshiftItem, options v13.DeleteOptions) error {
+	return client.PersistentVolumeClaims(namespace).Delete(item.name, &options)
 }
 
 func deleteRoute(namespace string, client *v1.RouteV1Client, item OpenshiftItem, options v13.DeleteOptions) error {

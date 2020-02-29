@@ -78,6 +78,16 @@ func ListAllLocalItems(namespace string, folderPath string, debug bool) ([]Opens
 			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
 			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, RouteKey, marshalltoString(local, &errs)))
 		}
+		if hasSuffixIgnoreCaseAndMinus(filePath, PvKey+JsonFileSuffix) {
+			local := v12.PersistentVolume{}
+			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
+			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, PvKey, marshalltoString(local, &errs)))
+		}
+		if hasSuffixIgnoreCaseAndMinus(filePath, PvClaimKey+JsonFileSuffix) {
+			local := v12.PersistentVolumeClaim{}
+			err = parseFileAndReplaceEnvVars(filePath, envs, &local, debug)
+			checkErrorOrAppend(err, &errs, &items, NewOpenshiftItem(local.Name, PvClaimKey, marshalltoString(local, &errs)))
+		}
 	}
 	return items, errs
 }
