@@ -38,6 +38,10 @@ func (oi OpenshiftItem) GetJson() string {
 	return oi.itemJson
 }
 
+func (oi OpenshiftItem) GetStatusMessage() string {
+	return GetStatusByType(oi)
+}
+
 func (oi OpenshiftItem) ParseTo(v interface{}) error {
 	return json.Unmarshal([]byte(oi.itemJson), v)
 }
