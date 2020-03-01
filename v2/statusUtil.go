@@ -74,7 +74,7 @@ func getStatusByReplicationController(item OpenshiftItem) string {
 		return "?"
 	}
 	return fmt.Sprintf("%d (%d/%d)",
-		realItem.Spec.Replicas,
+		realItem.Status.Replicas,
 		realItem.Status.ReadyReplicas,
 		realItem.Status.AvailableReplicas)
 }
