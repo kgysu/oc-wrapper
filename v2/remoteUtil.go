@@ -1,6 +1,7 @@
 package v2
 
 import (
+	"encoding/json"
 	v1 "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"
 	v15 "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
 	v13 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -153,7 +154,7 @@ func appendPods(resultItems *[]OpenshiftItem, appsClient *v12.CoreV1Client, name
 	list, err := appsClient.Pods(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, PodKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, PodKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -162,7 +163,7 @@ func appendServices(resultItems *[]OpenshiftItem, appsClient *v12.CoreV1Client, 
 	list, err := appsClient.Services(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ServiceKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ServiceKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -171,7 +172,7 @@ func appendConfigMaps(resultItems *[]OpenshiftItem, appsClient *v12.CoreV1Client
 	list, err := appsClient.ConfigMaps(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ConfigMapKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ConfigMapKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -180,7 +181,7 @@ func appendEvents(resultItems *[]OpenshiftItem, appsClient *v12.CoreV1Client, na
 	list, err := appsClient.Events(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, EventKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, EventKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -189,7 +190,7 @@ func appendPersistentVolumeClaims(resultItems *[]OpenshiftItem, appsClient *v12.
 	list, err := appsClient.PersistentVolumeClaims(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, PvClaimKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, PvClaimKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -197,7 +198,7 @@ func appendPersistentVolumes(resultItems *[]OpenshiftItem, appsClient *v12.CoreV
 	list, err := appsClient.PersistentVolumes().List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, PvKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, PvKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -206,7 +207,7 @@ func appendReplicationControllers(resultItems *[]OpenshiftItem, appsClient *v12.
 	list, err := appsClient.ReplicationControllers(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ReplicationControllerKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ReplicationControllerKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -215,7 +216,7 @@ func appendSecrets(resultItems *[]OpenshiftItem, appsClient *v12.CoreV1Client, n
 	list, err := appsClient.Secrets(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, SecretKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, SecretKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -224,7 +225,7 @@ func appendServiceAccounts(resultItems *[]OpenshiftItem, appsClient *v12.CoreV1C
 	list, err := appsClient.ServiceAccounts(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ServiceAccountKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, ServiceAccountKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -234,7 +235,7 @@ func appendRoles(resultItems *[]OpenshiftItem, appsClient *v16.RbacV1Client, nam
 	list, err := appsClient.Roles(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, RoleKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, RoleKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -243,7 +244,7 @@ func appendRoleBindings(resultItems *[]OpenshiftItem, appsClient *v16.RbacV1Clie
 	list, err := appsClient.RoleBindings(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, RoleBindingKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, RoleBindingKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -253,7 +254,7 @@ func appendRoutes(resultItems *[]OpenshiftItem, appsClient *v15.RouteV1Client, n
 	list, err := appsClient.Routes(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, RouteKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, RouteKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -263,7 +264,7 @@ func appendDeploymentConfigs(resultItems *[]OpenshiftItem, appsClient *v1.AppsV1
 	list, err := appsClient.DeploymentConfigs(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, DeploymentConfigKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, DeploymentConfigKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -272,7 +273,7 @@ func appendDeployments(resultItems *[]OpenshiftItem, appsClient v14.AppsV1Interf
 	list, err := appsClient.Deployments(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, DeploymentsKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, DeploymentsKey, marshallToStringOnlyLogOnError(item)))
 	}
 }
 
@@ -281,6 +282,15 @@ func appendStatefulSets(resultItems *[]OpenshiftItem, appsClient v14.AppsV1Inter
 	list, err := appsClient.StatefulSets(namespace).List(options)
 	onlyLogOnError(err)
 	for _, item := range list.Items {
-		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, StatefulSetKey, item.String()))
+		*resultItems = append(*resultItems, NewOpenshiftItem(item.Name, StatefulSetKey, marshallToStringOnlyLogOnError(item)))
 	}
+}
+
+func marshallToStringOnlyLogOnError(local interface{}) string {
+	marshalled, err := json.Marshal(&local)
+	if err != nil {
+		onlyLogOnError(err)
+		return ""
+	}
+	return string(marshalled)
 }
