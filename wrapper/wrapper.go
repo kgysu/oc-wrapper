@@ -38,7 +38,33 @@ import (
 	storagev1beta1client "k8s.io/client-go/kubernetes/typed/storage/v1beta1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	"os"
 )
+
+func GetConfigWithinPod() (*corev1client.CoreV1Client, string, error) {
+	// Build a rest.Config from configuration injected into the Pod by
+	// Kubernetes.  Clients will use the Pod's ServiceAccount principal.
+	restconfig, err := rest.InClusterConfig()
+	if err != nil {
+		return nil, "", nil
+	}
+
+	// If you need to know the Pod's Namespace, adjust the Pod's spec to pass
+	// the information into an environment variable in advance via the downward
+	// API.
+	namespace := os.Getenv("NAMESPACE")
+	if namespace == "" {
+		panic("NAMESPACE was not set")
+	}
+
+	// Create a Kubernetes core/v1 client.
+	coreclient, err := corev1client.NewForConfig(restconfig)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return coreclient, namespace, nil
+}
 
 // APIs
 
