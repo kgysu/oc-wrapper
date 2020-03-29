@@ -1,8 +1,8 @@
 package files
 
 import (
+	"fmt"
 	yamld "gopkg.in/yaml.v2"
-	"log"
 )
 
 const ConfigFileSuffix = "config.yaml"
@@ -79,11 +79,12 @@ func NewOpenshiftItem(name string, file string, kind string, data string) Opensh
 }
 
 func (op *OpenshiftProject) LoadProjectFilesData() {
-	for _, item := range op.Items {
+	for i, item := range op.Items {
 		fileData, err := ReadFile(item.File)
 		if err != nil {
-			log.Fatalf("could not read file [%]\n", item)
+			fmt.Printf("could not read file [%s]\n", item.File)
 		}
-		item.RawData = fileData
+		op.Items[i].RawData = fileData
+		op.Items[i].Data = string(fileData)
 	}
 }
