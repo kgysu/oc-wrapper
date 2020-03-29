@@ -16,6 +16,7 @@ type OpenshiftProject struct {
 
 type OpenshiftItem struct {
 	Name    string
+	Kind    string
 	File    string
 	Data    string
 	RawData []byte
@@ -75,7 +76,7 @@ func NewOpenshiftItem(name string, file string, data string) OpenshiftItem {
 	}
 }
 
-func (op *OpenshiftProject) LoadProjectFiles() {
+func (op *OpenshiftProject) LoadProjectFilesData() {
 	for _, item := range op.Items {
 		fileData, err := ReadFile(item.File)
 		if err != nil {
