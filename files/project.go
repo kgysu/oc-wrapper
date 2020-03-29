@@ -51,12 +51,12 @@ func NewProjectFromConfig(folder string) (*OpenshiftProject, error) {
 	if err != nil {
 		return nil, err
 	}
-	var newProject *OpenshiftProject
-	err = yamld.Unmarshal(configData, newProject)
+	var newProject OpenshiftProject
+	err = yamld.Unmarshal(configData, &newProject)
 	if err != nil {
 		return nil, err
 	}
-	return newProject, nil
+	return &newProject, nil
 }
 
 func NewOpenshiftItemFromFile(name string, file string, rawdata []byte) OpenshiftItem {
