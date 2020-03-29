@@ -60,17 +60,19 @@ func NewProjectFromConfig(folder string) (*OpenshiftProject, error) {
 	return &newProject, nil
 }
 
-func NewOpenshiftItemFromFile(name string, file string, rawdata []byte) OpenshiftItem {
+func NewOpenshiftItemFromFile(name string, file string, kind string, rawdata []byte) OpenshiftItem {
 	return OpenshiftItem{
 		Name:    name,
+		Kind:    kind,
 		File:    file,
 		RawData: rawdata,
 	}
 }
 
-func NewOpenshiftItem(name string, file string, data string) OpenshiftItem {
+func NewOpenshiftItem(name string, file string, kind string, data string) OpenshiftItem {
 	return OpenshiftItem{
 		Name: name,
+		Kind: kind,
 		File: file,
 		Data: data,
 	}
