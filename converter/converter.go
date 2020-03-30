@@ -87,14 +87,20 @@ func YamlToObject(data []byte, prettyPrint bool, strict bool, obj runtime.Object
 			Strict: strict,
 		})
 
-	origGvk := obj.GetObjectKind().GroupVersionKind()
-	resultObj, gvk, err := serializer.Decode(data, &origGvk, obj)
-	if err != nil {
-		return nil, nil, err
+	if obj == nil {
+		resultObj, gvk, err := serializer.Decode(data, nil, nil)
+		if err != nil {
+			return nil, nil, err
+		}
+		return resultObj, gvk, nil
+	} else {
+		origGvk := obj.GetObjectKind().GroupVersionKind()
+		resultObj, gvk, err := serializer.Decode(data, &origGvk, obj)
+		if err != nil {
+			return nil, nil, err
+		}
+		return resultObj, gvk, nil
 	}
-	//fmt.Printf("ResultObj=[%v]", resObj)
-	//fmt.Printf("ResultGvk=[%v]", gvk)
-	return resultObj, gvk, nil
 }
 
 func RawToObject(rawExtension runtime.RawExtension, prettyPrint bool, strict bool) (runtime.Object, *schema.GroupVersionKind, error) {
