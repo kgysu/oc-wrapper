@@ -47,6 +47,7 @@ func GetRolesInterface(namespace string, restConf *rest.Config) (v14.RoleInterfa
 	}
 	return rbacClient.Roles(namespace), nil
 }
+
 func GetRoleBindingsInterface(namespace string, restConf *rest.Config) (v14.RoleBindingInterface, error) {
 	rbacClient, err := GetRbacV1Client(restConf)
 	if err != nil {
@@ -62,6 +63,7 @@ func GetEventsInterface(namespace string, restConf *rest.Config) (v12.EventInter
 	}
 	return coreClient.Events(namespace), nil
 }
+
 func GetReplicationControllersInterface(namespace string, restConf *rest.Config) (v12.ReplicationControllerInterface, error) {
 	coreClient, err := GetCoreV1Client(restConf)
 	if err != nil {
@@ -69,6 +71,7 @@ func GetReplicationControllersInterface(namespace string, restConf *rest.Config)
 	}
 	return coreClient.ReplicationControllers(namespace), nil
 }
+
 func GetEndpointsInterface(namespace string, restConf *rest.Config) (v12.EndpointsInterface, error) {
 	coreClient, err := GetCoreV1Client(restConf)
 	if err != nil {
@@ -76,6 +79,7 @@ func GetEndpointsInterface(namespace string, restConf *rest.Config) (v12.Endpoin
 	}
 	return coreClient.Endpoints(namespace), nil
 }
+
 func GetSecretsInterface(namespace string, restConf *rest.Config) (v12.SecretInterface, error) {
 	coreClient, err := GetCoreV1Client(restConf)
 	if err != nil {
@@ -83,6 +87,7 @@ func GetSecretsInterface(namespace string, restConf *rest.Config) (v12.SecretInt
 	}
 	return coreClient.Secrets(namespace), nil
 }
+
 func GetPersistentVolumeClaimsInterface(namespace string, restConf *rest.Config) (v12.PersistentVolumeClaimInterface, error) {
 	coreClient, err := GetCoreV1Client(restConf)
 	if err != nil {
@@ -90,6 +95,7 @@ func GetPersistentVolumeClaimsInterface(namespace string, restConf *rest.Config)
 	}
 	return coreClient.PersistentVolumeClaims(namespace), nil
 }
+
 func GetPodsInterface(namespace string, restConf *rest.Config) (v12.PodInterface, error) {
 	coreClient, err := GetCoreV1Client(restConf)
 	if err != nil {
@@ -97,6 +103,7 @@ func GetPodsInterface(namespace string, restConf *rest.Config) (v12.PodInterface
 	}
 	return coreClient.Pods(namespace), nil
 }
+
 func GetServiceAccountsInterface(namespace string, restConf *rest.Config) (v12.ServiceAccountInterface, error) {
 	coreClient, err := GetCoreV1Client(restConf)
 	if err != nil {

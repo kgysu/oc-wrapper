@@ -79,11 +79,10 @@ func ObjToYaml(obj runtime.Object, w io.Writer, prettyPrint bool, strict bool) e
 	return nil
 }
 
-func YamlToObject(data []byte, prettyPrint bool, strict bool, obj runtime.Object) (runtime.Object, *schema.GroupVersionKind, error) {
+func YamlToObject(data []byte, strict bool, obj runtime.Object) (runtime.Object, *schema.GroupVersionKind, error) {
 	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
 		scheme.Scheme, json.SerializerOptions{
 			Yaml:   true,
-			Pretty: prettyPrint,
 			Strict: strict,
 		})
 
@@ -103,6 +102,7 @@ func YamlToObject(data []byte, prettyPrint bool, strict bool, obj runtime.Object
 	}
 }
 
+// TODO: check if needed
 func RawToObject(rawExtension runtime.RawExtension, prettyPrint bool, strict bool) (runtime.Object, *schema.GroupVersionKind, error) {
 	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
 		scheme.Scheme, json.SerializerOptions{
