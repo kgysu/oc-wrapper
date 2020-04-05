@@ -13,18 +13,25 @@ func NewProjectFromNamespace(projectName string, namespace string, restConf *res
 
 	// TODO add more Types
 	// Add DeploymentConfigs
-	dcs, err := ListDeploymentConfigs(namespace, restConf, options)
+	newItems, err := ListDeploymentConfigs(namespace, restConf, options)
 	if err != nil {
 		return nil, err
 	}
-	items = append(items, dcs...)
+	items = append(items, newItems...)
 
 	// Add Services
-	svcs, err := ListServices(namespace, restConf, options)
+	newItems, err = ListServices(namespace, restConf, options)
 	if err != nil {
 		return nil, err
 	}
-	items = append(items, svcs...)
+	items = append(items, newItems...)
+
+	// Add Routes
+	newItems, err = ListRoutes(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	items = append(items, newItems...)
 
 	// Create Project
 	op := project.NewOpenshiftProject(projectName)
@@ -32,7 +39,7 @@ func NewProjectFromNamespace(projectName string, namespace string, restConf *res
 	return op, nil
 }
 
-func NewProjectsFromDisk() ([]*project.OpenshiftProject, error) {
+func NewProjectsFromDisk(namespace string) ([]*project.OpenshiftProject, error) {
 	dir, err := getCurrentDir()
 	if err != nil {
 		return nil, err
@@ -47,7 +54,7 @@ func NewProjectsFromDisk() ([]*project.OpenshiftProject, error) {
 
 	var projects []*project.OpenshiftProject
 	for _, folder := range folders {
-		projectFromDisk, err := NewProjectFromDisk(folder)
+		projectFromDisk, err := NewProjectFromDisk(folder, namespace)
 		if err != nil {
 			// only log on error
 			fmt.Println(err.Error())
@@ -58,7 +65,7 @@ func NewProjectsFromDisk() ([]*project.OpenshiftProject, error) {
 	return projects, nil
 }
 
-func NewProjectFromDisk(projectName string) (*project.OpenshiftProject, error) {
+func NewProjectFromDisk(projectName string, namespace string) (*project.OpenshiftProject, error) {
 	var items []project.OpenshiftItemInterface
 	dir, err := getCurrentDir()
 	if err != nil {
@@ -66,22 +73,38 @@ func NewProjectFromDisk(projectName string) (*project.OpenshiftProject, error) {
 	}
 
 	rootDir := dir + config.GetRootFolderOrDefault()
-	if !existsFile(rootDir) {
-		return nil, fmt.Errorf("no projects found")
-	}
 	projectDir := rootDir + "/" + projectName
-	if !existsFile(projectDir) {
+	if !existsFile(rootDir) || !existsFile(projectDir) {
 		return nil, fmt.Errorf("no projects found")
 	}
-
-	files, err := filePathWalkDir(projectDir)
+	envsDir := rootDir + "/" + projectName + "/" + namespace
+	err = createIfNotExists(envsDir)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, file := range files {
+	yamlFiles, err := filesInDir(projectDir)
+	if err != nil {
+		return nil, err
+	}
+
+	envfiles, err := filesInDir(envsDir)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: environment specific Items
+	//envYamlFiles := filterFilesByType(envfiles, ".yaml")
+	envEnvFiles := filterFilesByType(envfiles, ".env")
+
+	envsMap, err := envFilesToMap(envEnvFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range yamlFiles {
 		fmt.Printf("file found [%s] \n", file)
-		item, err := NewOpenshiftItemFromFile(file)
+		item, err := NewOpenshiftItemFromFile(file, envsMap)
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {

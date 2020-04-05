@@ -4,6 +4,7 @@ import (
 	"github.com/kgysu/oc-wrapper/items"
 	"github.com/kgysu/oc-wrapper/project"
 	v1 "github.com/openshift/api/apps/v1"
+	v13 "github.com/openshift/api/route/v1"
 	v12 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -128,6 +129,36 @@ var sampleService = v12.Service{
 	Status: v12.ServiceStatus{},
 }
 
+var defaultWeight = int32(100)
+
+var sampleRoute = v13.Route{
+	TypeMeta: metav1.TypeMeta{
+		Kind:       "Route",
+		APIVersion: "route.openshift.io/v1",
+	},
+	ObjectMeta: metav1.ObjectMeta{
+		Name:        "sample",
+		Labels:      map[string]string{"app": "sample"},
+		Annotations: map[string]string{"app": "sample"},
+	},
+	Spec: v13.RouteSpec{
+		Host: "sample-route",
+		Path: "",
+		To: v13.RouteTargetReference{
+			Kind:   "Service",
+			Name:   "sample",
+			Weight: &defaultWeight,
+		},
+		Port: &v13.RoutePort{TargetPort: intstr.FromInt(8080)},
+		TLS: &v13.TLSConfig{
+			Termination:                   v13.TLSTerminationEdge,
+			InsecureEdgeTerminationPolicy: v13.InsecureEdgeTerminationPolicyRedirect,
+		},
+		WildcardPolicy: v13.WildcardPolicyNone,
+	},
+	Status: v13.RouteStatus{},
+}
+
 func GetSampleProject() project.OpenshiftProject {
 	return project.OpenshiftProject{
 		Name:         SampleProjectName,
@@ -135,6 +166,7 @@ func GetSampleProject() project.OpenshiftProject {
 		Items: []project.OpenshiftItemInterface{
 			items.NewOpDeploymentConfig(&sampleDeploymentConfig),
 			items.NewOpService(&sampleService),
+			items.NewOpRoute(&sampleRoute),
 		},
 	}
 }

@@ -17,25 +17,25 @@ var OpServiceTypeMeta = v12.TypeMeta{
 }
 
 type OpService struct {
-	svc *v1.Service
+	Service *v1.Service
 }
 
-func NewOpService(svc *v1.Service) *OpService {
-	svc.TypeMeta = OpServiceTypeMeta
+func NewOpService(Service *v1.Service) *OpService {
+	Service.TypeMeta = OpServiceTypeMeta
 	return &OpService{
-		svc: svc,
+		Service: Service,
 	}
 }
 
 // Methods
 
-func (oSvc *OpService) GetFileName() string {
-	return fmt.Sprintf("%s-%s.yaml", oSvc.svc.Name, oSvc.svc.Kind)
+func (oService *OpService) GetFileName() string {
+	return fmt.Sprintf("%s-%s.yaml", oService.Service.Name, oService.Service.Kind)
 }
 
-func (oSvc *OpService) WriteToFile(file string) error {
+func (oService *OpService) WriteToFile(file string) error {
 	var sb strings.Builder
-	err := converter.ObjToYaml(oSvc.svc, &sb, true, false)
+	err := converter.ObjToYaml(oService.Service, &sb, true, false)
 	if err != nil {
 		return err
 	}
@@ -43,75 +43,76 @@ func (oSvc *OpService) WriteToFile(file string) error {
 	return files.CreateFile(file, fileData)
 }
 
-func (oSvc *OpService) LoadFromFile(file string) error {
-	data, err := files.ReadFile(file)
+func (oService *OpService) LoadFromFile(file string, envs map[string]string) error {
+	tempData, err := files.ReadFile(file)
 	if err != nil {
 		return err
 	}
-	_, _, err = converter.YamlToObject(data, false, oSvc.svc)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (oSvc *OpService) Get(namespace string, restConf *rest.Config, name string) error {
-	svcInterface, err := v3.GetServicesInterface(namespace, restConf)
-	if err != nil {
-		return err
-	}
-	svc, err := svcInterface.Get(name, v12.GetOptions{})
-	if err != nil {
-		return err
-	}
-	oSvc.svc = svc
-	return nil
-}
-
-func (oSvc *OpService) Create(namespace string, restConf *rest.Config) error {
-	svcInterface, err := v3.GetServicesInterface(namespace, restConf)
-	if err != nil {
-		return err
-	}
-	_, err = svcInterface.Create(oSvc.svc)
+	data := files.ReplaceEnvs(string(tempData), envs)
+	_, _, err = converter.YamlToObject([]byte(data), false, oService.Service)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (oSvc *OpService) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
-	svcInterface, err := v3.GetServicesInterface(namespace, restConf)
+func (oService *OpService) Get(namespace string, restConf *rest.Config, name string) error {
+	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
-	err = svcInterface.Delete(oSvc.svc.Name, options)
+	Service, err := ServiceInterface.Get(name, v12.GetOptions{})
+	if err != nil {
+		return err
+	}
+	oService.Service = Service
+	return nil
+}
+
+func (oService *OpService) Create(namespace string, restConf *rest.Config) error {
+	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	_, err = ServiceInterface.Create(oService.Service)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (oSvc *OpService) String() string {
-	return fmt.Sprintf("%s %s \n", oSvc.Info(), oSvc.Status())
+func (oService *OpService) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
+	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	err = ServiceInterface.Delete(oService.Service.Name, options)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (oSvc *OpService) Info() string {
+func (oService *OpService) String() string {
+	return fmt.Sprintf("%s %s \n", oService.Info(), oService.Status())
+}
+
+func (oService *OpService) Info() string {
 	return fmt.Sprintf("[%s] %s ",
-		oSvc.svc.Kind,
-		oSvc.svc.Name)
+		oService.Service.Kind,
+		oService.Service.Name)
 }
 
 // TODO more infos
-func (oSvc *OpService) Status() string {
+func (oService *OpService) Status() string {
 	ports := ""
-	for _, port := range oSvc.svc.Spec.Ports {
+	for _, port := range oService.Service.Spec.Ports {
 		ports = ports + ":" + port.Name
 	}
 	return fmt.Sprintf("%s %s (%v) [%s]",
-		oSvc.svc.Spec.ClusterIP,
-		oSvc.svc.Spec.Type,
-		oSvc.svc.Spec.PublishNotReadyAddresses,
+		oService.Service.Spec.ClusterIP,
+		oService.Service.Spec.Type,
+		oService.Service.Spec.PublishNotReadyAddresses,
 		ports)
 
 }

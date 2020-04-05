@@ -10,33 +10,49 @@ import (
 
 // Todo add more Types
 func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
-	dcInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	api, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
 	}
-	dcs, err := dcInterface.List(options)
+	list, err := api.List(options)
 	if err != nil {
 		return nil, err
 	}
 	var resultItems []project.OpenshiftItemInterface
-	for _, dc := range dcs.Items {
-		resultItems = append(resultItems, items2.NewOpDeploymentConfig(&dc))
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items2.NewOpDeploymentConfig(&it))
 	}
 	return resultItems, nil
 }
 
 func ListServices(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
-	svcInterface, err := v3.GetServicesInterface(namespace, restConf)
+	api, err := v3.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
 	}
-	dcs, err := svcInterface.List(options)
+	list, err := api.List(options)
 	if err != nil {
 		return nil, err
 	}
 	var resultItems []project.OpenshiftItemInterface
-	for _, svc := range dcs.Items {
-		resultItems = append(resultItems, items2.NewOpService(&svc))
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items2.NewOpService(&it))
+	}
+	return resultItems, nil
+}
+
+func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
+	api, err := v3.GetRoutesInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []project.OpenshiftItemInterface
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items2.NewOpRoute(&it))
 	}
 	return resultItems, nil
 }

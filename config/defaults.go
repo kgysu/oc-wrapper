@@ -22,3 +22,15 @@ func GetRootFolderOrDefault() string {
 func SetRootFolder(folder string) {
 	rootFolder = folder
 }
+
+const defaultDebugMode = false
+
+var debugMode = defaultDebugMode
+
+func IsInDebugMode() bool {
+	return debugMode
+}
+
+func SetDebugMode(dm bool) {
+	debugMode = dm
+}

@@ -7,7 +7,7 @@ import (
 
 type OpenshiftItemInterface interface {
 	WriteToFile(file string) error
-	LoadFromFile(file string) error
+	LoadFromFile(file string, envs map[string]string) error
 	GetFileName() string
 	String() string
 	Info() string

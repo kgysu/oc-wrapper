@@ -17,25 +17,25 @@ var OpDeploymentConfigTypeMeta = v12.TypeMeta{
 }
 
 type OpDeploymentConfig struct {
-	dc *v1.DeploymentConfig
+	DeploymentConfig *v1.DeploymentConfig
 }
 
-func NewOpDeploymentConfig(dc *v1.DeploymentConfig) *OpDeploymentConfig {
-	dc.TypeMeta = OpDeploymentConfigTypeMeta
+func NewOpDeploymentConfig(DeploymentConfig *v1.DeploymentConfig) *OpDeploymentConfig {
+	DeploymentConfig.TypeMeta = OpDeploymentConfigTypeMeta
 	return &OpDeploymentConfig{
-		dc: dc,
+		DeploymentConfig: DeploymentConfig,
 	}
 }
 
 // Methods
 
-func (odc *OpDeploymentConfig) GetFileName() string {
-	return fmt.Sprintf("%s-%s.yaml", odc.dc.Name, odc.dc.Kind)
+func (oDeploymentConfig *OpDeploymentConfig) GetFileName() string {
+	return fmt.Sprintf("%s-%s.yaml", oDeploymentConfig.DeploymentConfig.Name, oDeploymentConfig.DeploymentConfig.Kind)
 }
 
-func (odc *OpDeploymentConfig) WriteToFile(file string) error {
+func (oDeploymentConfig *OpDeploymentConfig) WriteToFile(file string) error {
 	var sb strings.Builder
-	err := converter.ObjToYaml(odc.dc, &sb, true, false)
+	err := converter.ObjToYaml(oDeploymentConfig.DeploymentConfig, &sb, true, false)
 	if err != nil {
 		return err
 	}
@@ -43,68 +43,69 @@ func (odc *OpDeploymentConfig) WriteToFile(file string) error {
 	return files.CreateFile(file, fileData)
 }
 
-func (odc *OpDeploymentConfig) LoadFromFile(file string) error {
-	data, err := files.ReadFile(file)
+func (oDeploymentConfig *OpDeploymentConfig) LoadFromFile(file string, envs map[string]string) error {
+	tempData, err := files.ReadFile(file)
 	if err != nil {
 		return err
 	}
-	_, _, err = converter.YamlToObject(data, false, odc.dc)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (odc *OpDeploymentConfig) Get(namespace string, restConf *rest.Config, name string) error {
-	dcInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
-	if err != nil {
-		return err
-	}
-	dc, err := dcInterface.Get(name, v12.GetOptions{})
-	if err != nil {
-		return err
-	}
-	odc.dc = dc
-	return nil
-}
-
-func (odc *OpDeploymentConfig) Create(namespace string, restConf *rest.Config) error {
-	dcInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
-	if err != nil {
-		return err
-	}
-	_, err = dcInterface.Create(odc.dc)
+	data := files.ReplaceEnvs(string(tempData), envs)
+	_, _, err = converter.YamlToObject([]byte(data), false, oDeploymentConfig.DeploymentConfig)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (odc *OpDeploymentConfig) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
-	dcInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+func (oDeploymentConfig *OpDeploymentConfig) Get(namespace string, restConf *rest.Config, name string) error {
+	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
-	err = dcInterface.Delete(odc.dc.Name, options)
+	DeploymentConfig, err := DeploymentConfigInterface.Get(name, v12.GetOptions{})
+	if err != nil {
+		return err
+	}
+	oDeploymentConfig.DeploymentConfig = DeploymentConfig
+	return nil
+}
+
+func (oDeploymentConfig *OpDeploymentConfig) Create(namespace string, restConf *rest.Config) error {
+	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	_, err = DeploymentConfigInterface.Create(oDeploymentConfig.DeploymentConfig)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (odc *OpDeploymentConfig) String() string {
-	return fmt.Sprintf("%s %s \n", odc.Info(), odc.Status())
+func (oDeploymentConfig *OpDeploymentConfig) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
+	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	err = DeploymentConfigInterface.Delete(oDeploymentConfig.DeploymentConfig.Name, options)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (odc *OpDeploymentConfig) Info() string {
+func (oDeploymentConfig *OpDeploymentConfig) String() string {
+	return fmt.Sprintf("%s %s \n", oDeploymentConfig.Info(), oDeploymentConfig.Status())
+}
+
+func (oDeploymentConfig *OpDeploymentConfig) Info() string {
 	return fmt.Sprintf("[%s] %s ",
-		odc.dc.Kind,
-		odc.dc.Name)
+		oDeploymentConfig.DeploymentConfig.Kind,
+		oDeploymentConfig.DeploymentConfig.Name)
 }
 
-func (odc *OpDeploymentConfig) Status() string {
+func (oDeploymentConfig *OpDeploymentConfig) Status() string {
 	return fmt.Sprintf("%d (%d/%d) ",
-		odc.dc.Spec.Replicas,
-		odc.dc.Status.ReadyReplicas,
-		odc.dc.Status.AvailableReplicas)
+		oDeploymentConfig.DeploymentConfig.Spec.Replicas,
+		oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas,
+		oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas)
 }
