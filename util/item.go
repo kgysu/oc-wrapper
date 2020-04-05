@@ -14,17 +14,17 @@ import (
 func NewOpenshiftItemFromFile(file string, envs map[string]string) (project.OpenshiftItemInterface, error) {
 
 	if strings.HasSuffix(file, "DeploymentConfig.yaml") {
-		item := items.NewOpDeploymentConfig(&v1.DeploymentConfig{})
+		item := items.NewOpDeploymentConfig(v1.DeploymentConfig{})
 		err := item.LoadFromFile(file, envs)
 		return item, err
 	}
 	if strings.HasSuffix(file, "Service.yaml") {
-		item := items.NewOpService(&v12.Service{})
+		item := items.NewOpService(v12.Service{})
 		err := item.LoadFromFile(file, envs)
 		return item, err
 	}
 	if strings.HasSuffix(file, "Route.yaml") {
-		item := items.NewOpRoute(&v13.Route{})
+		item := items.NewOpRoute(v13.Route{})
 		err := item.LoadFromFile(file, envs)
 		return item, err
 	}

@@ -12,22 +12,8 @@ func NewProjectFromNamespace(projectName string, namespace string, restConf *res
 	var items []project.OpenshiftItemInterface
 
 	// TODO add more Types
-	// Add DeploymentConfigs
-	newItems, err := ListDeploymentConfigs(namespace, restConf, options)
-	if err != nil {
-		return nil, err
-	}
-	items = append(items, newItems...)
-
-	// Add Services
-	newItems, err = ListServices(namespace, restConf, options)
-	if err != nil {
-		return nil, err
-	}
-	items = append(items, newItems...)
-
-	// Add Routes
-	newItems, err = ListRoutes(namespace, restConf, options)
+	// Add All
+	newItems, err := ListAll(namespace, restConf, options)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +89,6 @@ func NewProjectFromDisk(projectName string, namespace string) (*project.Openshif
 	}
 
 	for _, file := range yamlFiles {
-		fmt.Printf("file found [%s] \n", file)
 		item, err := NewOpenshiftItemFromFile(file, envsMap)
 		if err != nil {
 			fmt.Println(err.Error())

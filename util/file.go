@@ -28,7 +28,6 @@ func checkProjectPath(op *project.OpenshiftProject, currentDir string) error {
 func createIfNotExists(folder string) error {
 	if !existsFile(folder) {
 		err := os.Mkdir(folder, os.ModePerm)
-		fmt.Printf("created dir [%s]\n", folder)
 		if err != nil {
 			return err
 		}

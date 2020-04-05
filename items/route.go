@@ -20,10 +20,10 @@ type OpRoute struct {
 	Route *v1.Route
 }
 
-func NewOpRoute(Route *v1.Route) *OpRoute {
+func NewOpRoute(Route v1.Route) *OpRoute {
 	Route.TypeMeta = OpRouteTypeMeta
 	return &OpRoute{
-		Route: Route,
+		Route: &Route,
 	}
 }
 

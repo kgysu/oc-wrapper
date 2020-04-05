@@ -20,10 +20,10 @@ type OpService struct {
 	Service *v1.Service
 }
 
-func NewOpService(Service *v1.Service) *OpService {
+func NewOpService(Service v1.Service) *OpService {
 	Service.TypeMeta = OpServiceTypeMeta
 	return &OpService{
-		Service: Service,
+		Service: &Service,
 	}
 }
 

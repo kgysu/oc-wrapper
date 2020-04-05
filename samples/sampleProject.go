@@ -164,9 +164,9 @@ func GetSampleProject() project.OpenshiftProject {
 		Name:         SampleProjectName,
 		Environments: nil,
 		Items: []project.OpenshiftItemInterface{
-			items.NewOpDeploymentConfig(&sampleDeploymentConfig),
-			items.NewOpService(&sampleService),
-			items.NewOpRoute(&sampleRoute),
+			items.NewOpDeploymentConfig(sampleDeploymentConfig),
+			items.NewOpService(sampleService),
+			items.NewOpRoute(sampleRoute),
 		},
 	}
 }

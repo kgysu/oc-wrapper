@@ -20,20 +20,20 @@ type OpDeploymentConfig struct {
 	DeploymentConfig *v1.DeploymentConfig
 }
 
-func NewOpDeploymentConfig(DeploymentConfig *v1.DeploymentConfig) *OpDeploymentConfig {
+func NewOpDeploymentConfig(DeploymentConfig v1.DeploymentConfig) *OpDeploymentConfig {
 	DeploymentConfig.TypeMeta = OpDeploymentConfigTypeMeta
 	return &OpDeploymentConfig{
-		DeploymentConfig: DeploymentConfig,
+		DeploymentConfig: &DeploymentConfig,
 	}
 }
 
 // Methods
 
-func (oDeploymentConfig *OpDeploymentConfig) GetFileName() string {
+func (oDeploymentConfig OpDeploymentConfig) GetFileName() string {
 	return fmt.Sprintf("%s-%s.yaml", oDeploymentConfig.DeploymentConfig.Name, oDeploymentConfig.DeploymentConfig.Kind)
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) WriteToFile(file string) error {
+func (oDeploymentConfig OpDeploymentConfig) WriteToFile(file string) error {
 	var sb strings.Builder
 	err := converter.ObjToYaml(oDeploymentConfig.DeploymentConfig, &sb, true, false)
 	if err != nil {
@@ -43,7 +43,7 @@ func (oDeploymentConfig *OpDeploymentConfig) WriteToFile(file string) error {
 	return files.CreateFile(file, fileData)
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) LoadFromFile(file string, envs map[string]string) error {
+func (oDeploymentConfig OpDeploymentConfig) LoadFromFile(file string, envs map[string]string) error {
 	tempData, err := files.ReadFile(file)
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func (oDeploymentConfig *OpDeploymentConfig) Get(namespace string, restConf *res
 	return nil
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) Create(namespace string, restConf *rest.Config) error {
+func (oDeploymentConfig OpDeploymentConfig) Create(namespace string, restConf *rest.Config) error {
 	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
@@ -81,7 +81,7 @@ func (oDeploymentConfig *OpDeploymentConfig) Create(namespace string, restConf *
 	return nil
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
+func (oDeploymentConfig OpDeploymentConfig) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
 	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
@@ -93,17 +93,17 @@ func (oDeploymentConfig *OpDeploymentConfig) Delete(namespace string, restConf *
 	return nil
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) String() string {
+func (oDeploymentConfig OpDeploymentConfig) String() string {
 	return fmt.Sprintf("%s %s \n", oDeploymentConfig.Info(), oDeploymentConfig.Status())
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) Info() string {
+func (oDeploymentConfig OpDeploymentConfig) Info() string {
 	return fmt.Sprintf("[%s] %s ",
 		oDeploymentConfig.DeploymentConfig.Kind,
 		oDeploymentConfig.DeploymentConfig.Name)
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) Status() string {
+func (oDeploymentConfig OpDeploymentConfig) Status() string {
 	return fmt.Sprintf("%d (%d/%d) ",
 		oDeploymentConfig.DeploymentConfig.Spec.Replicas,
 		oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas,

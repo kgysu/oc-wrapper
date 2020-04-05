@@ -23,8 +23,8 @@ func GetTemplateProject(name string) project.OpenshiftProject {
 	}
 }
 
-func GetTemplateDeploymentConfig(name string) *v1.DeploymentConfig {
-	return &v1.DeploymentConfig{
+func GetTemplateDeploymentConfig(name string) v1.DeploymentConfig {
+	return v1.DeploymentConfig{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "DeploymentConfig",
 			APIVersion: "apps.openshift.io/v1",
@@ -114,8 +114,8 @@ func GetTemplateDeploymentConfig(name string) *v1.DeploymentConfig {
 	}
 }
 
-func GetTemplateService(name string) *v12.Service {
-	return &v12.Service{
+func GetTemplateService(name string) v12.Service {
+	return v12.Service{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Service",
 			APIVersion: "v1",
@@ -143,10 +143,10 @@ func GetTemplateService(name string) *v12.Service {
 	}
 }
 
-func GetTemplateRoute(name string) *v13.Route {
+func GetTemplateRoute(name string) v13.Route {
 	var defaultWeight = int32(100)
 
-	return &v13.Route{
+	return v13.Route{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Route",
 			APIVersion: "route.openshift.io/v1",
