@@ -21,7 +21,9 @@ type OpService struct {
 }
 
 func NewOpService(Service v1.Service) *OpService {
-	Service.TypeMeta = OpServiceTypeMeta
+	if Service.TypeMeta.Kind != OpServiceTypeMeta.Kind {
+		Service.TypeMeta = OpServiceTypeMeta
+	}
 	return &OpService{
 		Service: &Service,
 	}
@@ -30,17 +32,15 @@ func NewOpService(Service v1.Service) *OpService {
 // Methods
 
 func (oService *OpService) GetFileName() string {
-	return fmt.Sprintf("%s-%s.yaml", oService.Service.Name, oService.Service.Kind)
+	return fmt.Sprintf("%s-%s.yaml", oService.GetName(), oService.GetKind())
 }
 
 func (oService *OpService) WriteToFile(file string) error {
-	var sb strings.Builder
-	err := converter.ObjToYaml(oService.Service, &sb, true, false)
+	yamlContent, err := oService.ToYaml()
 	if err != nil {
 		return err
 	}
-	fileData := []byte(sb.String())
-	return files.CreateFile(file, fileData)
+	return files.CreateFile(file, []byte(yamlContent))
 }
 
 func (oService *OpService) LoadFromFile(file string, envs map[string]string) error {
@@ -49,7 +49,8 @@ func (oService *OpService) LoadFromFile(file string, envs map[string]string) err
 		return err
 	}
 	data := files.ReplaceEnvs(string(tempData), envs)
-	_, _, err = converter.YamlToObject([]byte(data), false, oService.Service)
+	files.CheckContent(data, file)
+	err = oService.FromData([]byte(data))
 	if err != nil {
 		return err
 	}
@@ -99,8 +100,8 @@ func (oService *OpService) String() string {
 
 func (oService *OpService) Info() string {
 	return fmt.Sprintf("[%s] %s ",
-		oService.Service.Kind,
-		oService.Service.Name)
+		oService.GetKind(),
+		oService.GetName())
 }
 
 // TODO more infos
@@ -115,4 +116,29 @@ func (oService *OpService) Status() string {
 		oService.Service.Spec.PublishNotReadyAddresses,
 		ports)
 
+}
+
+func (oService *OpService) GetName() string {
+	return oService.Service.Name
+}
+
+func (oService *OpService) GetKind() string {
+	return oService.Service.Kind
+}
+
+func (oService *OpService) ToYaml() (string, error) {
+	var contentBuilder strings.Builder
+	err := converter.ObjToYaml(oService.Service, &contentBuilder, true, true)
+	if err != nil {
+		return "", err
+	}
+	return contentBuilder.String(), nil
+}
+
+func (oService *OpService) FromData(data []byte) error {
+	_, _, err := converter.YamlToObject(data, false, oService.Service)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -30,17 +30,15 @@ func NewOpRoute(Route v1.Route) *OpRoute {
 // Methods
 
 func (oRoute *OpRoute) GetFileName() string {
-	return fmt.Sprintf("%s-%s.yaml", oRoute.Route.Name, oRoute.Route.Kind)
+	return fmt.Sprintf("%s-%s.yaml", oRoute.GetName(), oRoute.GetKind())
 }
 
 func (oRoute *OpRoute) WriteToFile(file string) error {
-	var sb strings.Builder
-	err := converter.ObjToYaml(oRoute.Route, &sb, true, false)
+	yamlContent, err := oRoute.ToYaml()
 	if err != nil {
 		return err
 	}
-	fileData := []byte(sb.String())
-	return files.CreateFile(file, fileData)
+	return files.CreateFile(file, []byte(yamlContent))
 }
 
 func (oRoute *OpRoute) LoadFromFile(file string, envs map[string]string) error {
@@ -49,7 +47,8 @@ func (oRoute *OpRoute) LoadFromFile(file string, envs map[string]string) error {
 		return err
 	}
 	data := files.ReplaceEnvs(string(tempData), envs)
-	_, _, err = converter.YamlToObject([]byte(data), false, oRoute.Route)
+	files.CheckContent(data, file)
+	err = oRoute.FromData([]byte(data))
 	if err != nil {
 		return err
 	}
@@ -99,8 +98,8 @@ func (oRoute *OpRoute) String() string {
 
 func (oRoute *OpRoute) Info() string {
 	return fmt.Sprintf("[%s] %s ",
-		oRoute.Route.Kind,
-		oRoute.Route.Name)
+		oRoute.GetKind(),
+		oRoute.GetName())
 }
 
 func (oRoute *OpRoute) Status() string {
@@ -109,4 +108,29 @@ func (oRoute *OpRoute) Status() string {
 		oRoute.Route.Spec.To.Name,
 		oRoute.Route.Spec.Port,
 		oRoute.Route.Spec.Path)
+}
+
+func (oRoute *OpRoute) GetName() string {
+	return oRoute.Route.Name
+}
+
+func (oRoute *OpRoute) GetKind() string {
+	return oRoute.Route.Kind
+}
+
+func (oRoute *OpRoute) ToYaml() (string, error) {
+	var contentBuilder strings.Builder
+	err := converter.ObjToYaml(oRoute.Route, &contentBuilder, true, true)
+	if err != nil {
+		return "", err
+	}
+	return contentBuilder.String(), nil
+}
+
+func (oRoute *OpRoute) FromData(data []byte) error {
+	_, _, err := converter.YamlToObject(data, false, oRoute.Route)
+	if err != nil {
+		return err
+	}
+	return nil
 }

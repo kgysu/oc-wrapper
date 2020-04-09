@@ -19,8 +19,11 @@ func ReplaceEnvs(content string, envs map[string]string) string {
 	for key, value := range envs {
 		result = strings.ReplaceAll(result, "${"+key+"}", value)
 	}
-	if strings.Contains(result, "$") {
-		fmt.Println("WARN: content contains not calculated placeholders!")
-	}
 	return result
+}
+
+func CheckContent(data string, file string) {
+	if strings.Contains(data, "$") {
+		fmt.Printf("WARN: file [%s] content contains placeholders! Marked with Dollar($) sign.", file)
+	}
 }

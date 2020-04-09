@@ -13,4 +13,8 @@ type OpenshiftItemInterface interface {
 	Info() string
 	Create(namespace string, restConf *rest.Config) error
 	Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error
+	GetName() string
+	GetKind() string
+	ToYaml() (string, error)
+	FromData(data []byte) error
 }

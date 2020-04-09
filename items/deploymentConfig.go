@@ -30,17 +30,15 @@ func NewOpDeploymentConfig(DeploymentConfig v1.DeploymentConfig) *OpDeploymentCo
 // Methods
 
 func (oDeploymentConfig OpDeploymentConfig) GetFileName() string {
-	return fmt.Sprintf("%s-%s.yaml", oDeploymentConfig.DeploymentConfig.Name, oDeploymentConfig.DeploymentConfig.Kind)
+	return fmt.Sprintf("%s-%s.yaml", oDeploymentConfig.GetName(), oDeploymentConfig.GetKind())
 }
 
 func (oDeploymentConfig OpDeploymentConfig) WriteToFile(file string) error {
-	var sb strings.Builder
-	err := converter.ObjToYaml(oDeploymentConfig.DeploymentConfig, &sb, true, false)
+	yamlContent, err := oDeploymentConfig.ToYaml()
 	if err != nil {
 		return err
 	}
-	fileData := []byte(sb.String())
-	return files.CreateFile(file, fileData)
+	return files.CreateFile(file, []byte(yamlContent))
 }
 
 func (oDeploymentConfig OpDeploymentConfig) LoadFromFile(file string, envs map[string]string) error {
@@ -49,7 +47,8 @@ func (oDeploymentConfig OpDeploymentConfig) LoadFromFile(file string, envs map[s
 		return err
 	}
 	data := files.ReplaceEnvs(string(tempData), envs)
-	_, _, err = converter.YamlToObject([]byte(data), false, oDeploymentConfig.DeploymentConfig)
+	files.CheckContent(data, file)
+	err = oDeploymentConfig.FromData([]byte(data))
 	if err != nil {
 		return err
 	}
@@ -99,8 +98,8 @@ func (oDeploymentConfig OpDeploymentConfig) String() string {
 
 func (oDeploymentConfig OpDeploymentConfig) Info() string {
 	return fmt.Sprintf("[%s] %s ",
-		oDeploymentConfig.DeploymentConfig.Kind,
-		oDeploymentConfig.DeploymentConfig.Name)
+		oDeploymentConfig.GetKind(),
+		oDeploymentConfig.GetName())
 }
 
 func (oDeploymentConfig OpDeploymentConfig) Status() string {
@@ -108,4 +107,29 @@ func (oDeploymentConfig OpDeploymentConfig) Status() string {
 		oDeploymentConfig.DeploymentConfig.Spec.Replicas,
 		oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas,
 		oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas)
+}
+
+func (oDeploymentConfig OpDeploymentConfig) GetName() string {
+	return oDeploymentConfig.DeploymentConfig.Name
+}
+
+func (oDeploymentConfig OpDeploymentConfig) GetKind() string {
+	return oDeploymentConfig.DeploymentConfig.Kind
+}
+
+func (oDeploymentConfig *OpDeploymentConfig) ToYaml() (string, error) {
+	var contentBuilder strings.Builder
+	err := converter.ObjToYaml(oDeploymentConfig.DeploymentConfig, &contentBuilder, true, true)
+	if err != nil {
+		return "", err
+	}
+	return contentBuilder.String(), nil
+}
+
+func (oDeploymentConfig *OpDeploymentConfig) FromData(data []byte) error {
+	_, _, err := converter.YamlToObject(data, false, oDeploymentConfig.DeploymentConfig)
+	if err != nil {
+		return err
+	}
+	return nil
 }

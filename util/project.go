@@ -32,7 +32,6 @@ func NewProjectsFromDisk(namespace string) ([]*project.OpenshiftProject, error) 
 	}
 
 	rootDir := dir + config.GetRootFolderOrDefault() + "/"
-	fmt.Println(rootDir)
 	folders, err := foldersInDir(rootDir)
 	if err != nil {
 		return nil, err
