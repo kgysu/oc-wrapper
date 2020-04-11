@@ -110,8 +110,8 @@ func (oRoute *OpRoute) Status() string {
 }
 
 func (oRoute OpRoute) InfoStatusHtml() string {
-	return fmt.Sprintf(`[%s]  <b>%s</b> <span class="badge badge-secondary">%s</span> 
-<span class="badge badge-light">%s</span>`,
+	return fmt.Sprintf(`<span class="badge badge-info">%s</span> <b>%s</b> <span class="badge badge-secondary">%s</span> 
+<span class="badge badge-secondary">%s</span>`,
 		oRoute.GetKind(),
 		oRoute.GetName(),
 		oRoute.Route.Spec.Host,

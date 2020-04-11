@@ -122,8 +122,8 @@ func (oService OpService) InfoStatusHtml() string {
 	for _, port := range oService.Service.Spec.Ports {
 		ports = ports + fmt.Sprintf("<span class=\"badge badge-secondary\">%s (%d)</span>", port.Name, port.Port)
 	}
-	return fmt.Sprintf(`[%s]  <b>%s</b> <span class="badge badge-secondary">%s</span> 
-<span class="badge badge-light">%s</span> <span class="badge badge-light">%v</span> %s`,
+	return fmt.Sprintf(`<span class="badge badge-info">%s</span>  <b>%s</b> <span class="badge badge-secondary">%s</span> 
+<span class="badge badge-secondary">%s</span> <span class="badge badge-secondary">%v</span> %s`,
 		oService.GetKind(),
 		oService.GetName(),
 		oService.Service.Spec.ClusterIP,
