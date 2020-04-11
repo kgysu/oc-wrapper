@@ -14,7 +14,7 @@ func NewOpenshiftProject(name string) *OpenshiftProject {
 	}
 }
 
-func (op OpenshiftProject) getItem(kind string, name string) OpenshiftItemInterface {
+func (op OpenshiftProject) GetItem(kind string, name string) OpenshiftItemInterface {
 	for _, item := range op.Items {
 		if kind == item.GetKind() && name == item.GetName() {
 			return item
