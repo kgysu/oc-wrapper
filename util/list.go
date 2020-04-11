@@ -28,6 +28,12 @@ func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) (
 	}
 	resultItems = append(resultItems, routes...)
 
+	pods, err := ListPods(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	resultItems = append(resultItems, pods...)
+
 	return resultItems, nil
 }
 
@@ -76,6 +82,22 @@ func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions
 	var resultItems []project.OpenshiftItemInterface
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpRoute(it))
+	}
+	return resultItems, nil
+}
+
+func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
+	api, err := v3.GetPodsInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []project.OpenshiftItemInterface
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items.NewOpPod(it))
 	}
 	return resultItems, nil
 }

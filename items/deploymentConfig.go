@@ -117,14 +117,14 @@ func (oDeploymentConfig OpDeploymentConfig) InfoStatusHtml() string {
 	if oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas == oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas {
 		readyStatus = "success"
 	}
-	return fmt.Sprintf(`<span class="badge badge-info">%s</span> <b>%s</b> <button type="button" class="btn btn-primary">
-  Replicas <span class="badge badge-%s">%d</span>
-</button> <button type="button" class="btn btn-primary">
-  Status <span class="badge badge-%s">(%d/%d)</span>
+	return fmt.Sprintf(`<b>%s</b> <span class="badge badge-info">%s</span> <button type="button" class="btn btn-sm btn-%s">
+  Replicas <span class="badge badge-light">%d</span>
+</button> <button type="button" class="btn btn-sm btn-%s">
+  Status <span class="badge badge-light">(%d/%d)</span>
 </button>
 `,
-		oDeploymentConfig.GetKind(),
 		oDeploymentConfig.GetName(),
+		oDeploymentConfig.GetKind(),
 		replicasStatus,
 		oDeploymentConfig.DeploymentConfig.Spec.Replicas,
 		readyStatus,

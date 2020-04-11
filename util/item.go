@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// TODO add new Types
+// TODO add more Types
 func NewOpenshiftItemFromFile(file string, envs map[string]string) (project.OpenshiftItemInterface, error) {
 
 	if strings.HasSuffix(file, "DeploymentConfig.yaml") {

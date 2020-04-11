@@ -10,8 +10,6 @@ import (
 
 func NewProjectFromNamespace(projectName string, namespace string, restConf *rest.Config, options v12.ListOptions) (*project.OpenshiftProject, error) {
 	var items []project.OpenshiftItemInterface
-
-	// TODO add more Types
 	// Add All
 	newItems, err := ListAll(namespace, restConf, options)
 	if err != nil {
