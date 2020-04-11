@@ -47,7 +47,6 @@ func (oDeploymentConfig OpDeploymentConfig) LoadFromFile(file string, envs map[s
 		return err
 	}
 	data := files.ReplaceEnvs(string(tempData), envs)
-	files.CheckContent(data, file)
 	err = oDeploymentConfig.FromData([]byte(data))
 	if err != nil {
 		return err

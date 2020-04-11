@@ -49,7 +49,6 @@ func (oService *OpService) LoadFromFile(file string, envs map[string]string) err
 		return err
 	}
 	data := files.ReplaceEnvs(string(tempData), envs)
-	files.CheckContent(data, file)
 	err = oService.FromData([]byte(data))
 	if err != nil {
 		return err

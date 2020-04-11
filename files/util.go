@@ -1,7 +1,6 @@
 package files
 
 import (
-	"fmt"
 	"io/ioutil"
 	"strings"
 )
@@ -20,10 +19,4 @@ func ReplaceEnvs(content string, envs map[string]string) string {
 		result = strings.ReplaceAll(result, "${"+key+"}", value)
 	}
 	return result
-}
-
-func CheckContent(data string, file string) {
-	if strings.Contains(data, "$") {
-		fmt.Printf("WARN: file [%s] content contains placeholders! Marked with Dollar($) sign.", file)
-	}
 }

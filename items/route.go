@@ -47,7 +47,6 @@ func (oRoute *OpRoute) LoadFromFile(file string, envs map[string]string) error {
 		return err
 	}
 	data := files.ReplaceEnvs(string(tempData), envs)
-	files.CheckContent(data, file)
 	err = oRoute.FromData([]byte(data))
 	if err != nil {
 		return err
