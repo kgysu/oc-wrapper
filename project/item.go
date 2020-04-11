@@ -12,6 +12,7 @@ type OpenshiftItemInterface interface {
 	String() string
 	Info() string
 	Status() string
+	InfoStatusHtml() string
 	Create(namespace string, restConf *rest.Config) error
 	Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error
 	GetName() string

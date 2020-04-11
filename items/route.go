@@ -109,6 +109,15 @@ func (oRoute *OpRoute) Status() string {
 		oRoute.Route.Spec.Path)
 }
 
+func (oRoute OpRoute) InfoStatusHtml() string {
+	return fmt.Sprintf(`[%s]  <b>%s</b> <span class="badge badge-secondary">%s</span> 
+<span class="badge badge-light">%s</span>`,
+		oRoute.GetKind(),
+		oRoute.GetName(),
+		oRoute.Route.Spec.Host,
+		oRoute.Route.Spec.To.Name)
+}
+
 func (oRoute *OpRoute) GetName() string {
 	return oRoute.Route.Name
 }

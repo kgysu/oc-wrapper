@@ -108,6 +108,20 @@ func (oDeploymentConfig OpDeploymentConfig) Status() string {
 		oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas)
 }
 
+func (oDeploymentConfig OpDeploymentConfig) InfoStatusHtml() string {
+	return fmt.Sprintf(`[%s]  <b>%s</b> <button type="button" class="btn btn-primary">
+  Replicas <span class="badge badge-light">%d</span>
+</button> <button type="button" class="btn btn-primary">
+  Status <span class="badge badge-light">(%d/%d)</span>
+</button>
+`,
+		oDeploymentConfig.GetKind(),
+		oDeploymentConfig.GetName(),
+		oDeploymentConfig.DeploymentConfig.Spec.Replicas,
+		oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas,
+		oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas)
+}
+
 func (oDeploymentConfig OpDeploymentConfig) GetName() string {
 	return oDeploymentConfig.DeploymentConfig.Name
 }
