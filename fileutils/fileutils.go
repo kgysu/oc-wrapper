@@ -1,32 +1,31 @@
-package util
+package fileutils
 
 import (
 	"bufio"
-	"fmt"
-	"github.com/kgysu/oc-wrapper/config"
-	"github.com/kgysu/oc-wrapper/project"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-// File Helpers
-
-func checkProjectPath(op *project.OpenshiftProject, currentDir string) error {
-	err := createIfNotExists(currentDir + "/projects")
-	if err != nil {
-		return err
-	}
-	err = createIfNotExists(currentDir + "/projects" + "/" + op.Name)
-	if err != nil {
-		return err
-	}
-	return nil
+func ReadFile(file string) ([]byte, error) {
+	return ioutil.ReadFile(file)
 }
 
-func createIfNotExists(folder string) error {
-	if !existsFile(folder) {
+func CreateFile(filename string, data []byte) error {
+	return ioutil.WriteFile(filename, data, 0644)
+}
+
+func ReplaceEnvs(content string, envs map[string]string) string {
+	result := content
+	for key, value := range envs {
+		result = strings.ReplaceAll(result, "${"+key+"}", value)
+	}
+	return result
+}
+
+func CreateIfNotExists(folder string) error {
+	if !ExistsFile(folder) {
 		err := os.Mkdir(folder, os.ModePerm)
 		if err != nil {
 			return err
@@ -35,14 +34,14 @@ func createIfNotExists(folder string) error {
 	return nil
 }
 
-func existsFile(file string) bool {
+func ExistsFile(file string) bool {
 	if _, err := os.Stat(file); os.IsNotExist(err) {
 		return false
 	}
 	return true
 }
 
-func getCurrentDir() (string, error) {
+func GetCurrentDir() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
 		return "", err
@@ -50,7 +49,7 @@ func getCurrentDir() (string, error) {
 	return dir, nil
 }
 
-func filePathWalkDir(root string) ([]string, error) {
+func FilePathWalkDir(root string) ([]string, error) {
 	var files []string
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
@@ -61,7 +60,7 @@ func filePathWalkDir(root string) ([]string, error) {
 	return files, err
 }
 
-func filterFilesByType(files []string, fileType string) []string {
+func FilterFilesByType(files []string, fileType string) []string {
 	var resultFiles []string
 	for _, file := range files {
 		if strings.HasSuffix(file, fileType) {
@@ -71,7 +70,7 @@ func filterFilesByType(files []string, fileType string) []string {
 	return resultFiles
 }
 
-func getEnvFileByName(files []string, name string) string {
+func GetEnvFileByName(files []string, name string) string {
 	for _, file := range files {
 		if strings.HasPrefix(file, name) {
 			return file
@@ -80,7 +79,7 @@ func getEnvFileByName(files []string, name string) string {
 	return ""
 }
 
-func envFilesToMap(files []string) (map[string]string, error) {
+func EnvFilesToMap(files []string) (map[string]string, error) {
 	currentEnvs := make(map[string]string)
 	for _, envFile := range files {
 		envData, err := os.Open(envFile)
@@ -92,9 +91,6 @@ func envFilesToMap(files []string) (map[string]string, error) {
 			text := scanner.Text()
 			splittedEnv := strings.SplitN(text, "=", 2)
 			if len(splittedEnv) == 2 {
-				if config.IsInDebugMode() {
-					fmt.Printf("Found Env: %s=%s \n", splittedEnv[0], splittedEnv[1])
-				}
 				currentEnvs[splittedEnv[0]] = splittedEnv[1]
 			}
 		}
@@ -105,7 +101,7 @@ func envFilesToMap(files []string) (map[string]string, error) {
 	return currentEnvs, nil
 }
 
-func filesInDir(root string) ([]string, error) {
+func FilesInDir(root string) ([]string, error) {
 	var resultFiles []string
 	files, err := ioutil.ReadDir(root)
 	if err != nil {
@@ -119,7 +115,7 @@ func filesInDir(root string) ([]string, error) {
 	return resultFiles, err
 }
 
-func foldersInDir(root string) ([]string, error) {
+func FoldersInDir(root string) ([]string, error) {
 	var folders []string
 	files, err := ioutil.ReadDir(root)
 	if err != nil {

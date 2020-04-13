@@ -3,7 +3,7 @@ package items
 import (
 	"fmt"
 	"github.com/kgysu/oc-wrapper/converter"
-	"github.com/kgysu/oc-wrapper/files"
+	"github.com/kgysu/oc-wrapper/fileutils"
 	v3 "github.com/kgysu/oc-wrapper/v3"
 	v1 "github.com/openshift/api/route/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -38,15 +38,15 @@ func (oRoute *OpRoute) WriteToFile(file string) error {
 	if err != nil {
 		return err
 	}
-	return files.CreateFile(file, []byte(yamlContent))
+	return fileutils.CreateFile(file, []byte(yamlContent))
 }
 
 func (oRoute *OpRoute) LoadFromFile(file string, envs map[string]string) error {
-	tempData, err := files.ReadFile(file)
+	tempData, err := fileutils.ReadFile(file)
 	if err != nil {
 		return err
 	}
-	data := files.ReplaceEnvs(string(tempData), envs)
+	data := fileutils.ReplaceEnvs(string(tempData), envs)
 	err = oRoute.FromData([]byte(data))
 	if err != nil {
 		return err

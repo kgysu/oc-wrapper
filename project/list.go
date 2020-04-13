@@ -1,15 +1,14 @@
-package util
+package project
 
 import (
 	"github.com/kgysu/oc-wrapper/items"
-	"github.com/kgysu/oc-wrapper/project"
-	"github.com/kgysu/oc-wrapper/v3"
+	v3 "github.com/kgysu/oc-wrapper/v3"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 )
 
-func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
-	var resultItems []project.OpenshiftItemInterface
+func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
+	var resultItems []OpenshiftItemInterface
 	dcs, err := ListDeploymentConfigs(namespace, restConf, options)
 	if err != nil {
 		return nil, err
@@ -38,7 +37,7 @@ func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) (
 }
 
 // Todo add more Types
-func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
+func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
 	api, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -47,14 +46,14 @@ func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []project.OpenshiftItemInterface
+	var resultItems []OpenshiftItemInterface
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpDeploymentConfig(it))
 	}
 	return resultItems, nil
 }
 
-func ListServices(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
+func ListServices(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
 	api, err := v3.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -63,14 +62,14 @@ func ListServices(namespace string, restConf *rest.Config, options v12.ListOptio
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []project.OpenshiftItemInterface
+	var resultItems []OpenshiftItemInterface
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpService(it))
 	}
 	return resultItems, nil
 }
 
-func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
+func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
 	api, err := v3.GetRoutesInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -79,14 +78,14 @@ func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []project.OpenshiftItemInterface
+	var resultItems []OpenshiftItemInterface
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpRoute(it))
 	}
 	return resultItems, nil
 }
 
-func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) ([]project.OpenshiftItemInterface, error) {
+func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
 	api, err := v3.GetPodsInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -95,7 +94,7 @@ func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) 
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []project.OpenshiftItemInterface
+	var resultItems []OpenshiftItemInterface
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpPod(it))
 	}
