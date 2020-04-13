@@ -83,6 +83,10 @@ func (oPod *OpPod) UpdateScale(replicas int, namespace string, restConf *rest.Co
 	return fmt.Errorf("")
 }
 
+func (oPod *OpPod) GetScale() int32 {
+	return 0
+}
+
 func (oPod *OpPod) String() string {
 	return fmt.Sprintf("%s %s \n", oPod.Info(), oPod.Status())
 }

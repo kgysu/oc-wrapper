@@ -97,6 +97,10 @@ func (oService *OpService) UpdateScale(replicas int, namespace string, restConf 
 	return fmt.Errorf("")
 }
 
+func (oService *OpService) GetScale() int32 {
+	return 0
+}
+
 func (oService *OpService) String() string {
 	return fmt.Sprintf("%s %s \n", oService.Info(), oService.Status())
 }

@@ -22,6 +22,7 @@ type OpenshiftItemInterface interface {
 	Create(namespace string, restConf *rest.Config) error
 	Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error
 	UpdateScale(replicas int, namespace string, restConf *rest.Config) error
+	GetScale() int32
 	GetName() string
 	GetKind() string
 	ToYaml() (string, error)

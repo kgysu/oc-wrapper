@@ -95,6 +95,10 @@ func (oRoute *OpRoute) UpdateScale(replicas int, namespace string, restConf *res
 	return fmt.Errorf("")
 }
 
+func (oRoute *OpRoute) GetScale() int32 {
+	return 0
+}
+
 func (oRoute *OpRoute) String() string {
 	return fmt.Sprintf("%s %s \n", oRoute.Info(), oRoute.Status())
 }

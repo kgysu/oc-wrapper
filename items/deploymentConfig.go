@@ -108,6 +108,10 @@ func (oDeploymentConfig OpDeploymentConfig) UpdateScale(replicas int, namespace 
 	return nil
 }
 
+func (oDeploymentConfig OpDeploymentConfig) GetScale() int32 {
+	return oDeploymentConfig.DeploymentConfig.Spec.Replicas
+}
+
 func (oDeploymentConfig OpDeploymentConfig) String() string {
 	return fmt.Sprintf("%s %s", oDeploymentConfig.Info(), oDeploymentConfig.Status())
 }
