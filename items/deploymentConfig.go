@@ -141,10 +141,10 @@ func (oDeploymentConfig OpDeploymentConfig) InfoStatusHtml() string {
 	return fmt.Sprint(
 		createInfo(oDeploymentConfig.GetKind(), oDeploymentConfig.GetName()),
 		createLabelBadges(oDeploymentConfig.DeploymentConfig.Labels),
-		createStatusButton(replicasStatus,
-			createBadge("light", fmt.Sprintf("%d", oDeploymentConfig.DeploymentConfig.Spec.Replicas))),
-		createStatusButton(readyStatus,
-			createBadge("light", fmt.Sprintf("(%d/%d)", oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas, oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas))),
+		createStatusButton(replicasStatus, fmt.Sprint("Replicas",
+			createBadge("light", fmt.Sprintf("%d", oDeploymentConfig.DeploymentConfig.Spec.Replicas)))),
+		createStatusButton(readyStatus, fmt.Sprint("Status",
+			createBadge("light", fmt.Sprintf("(%d/%d)", oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas, oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas)))),
 	)
 }
 

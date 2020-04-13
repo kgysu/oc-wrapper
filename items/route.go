@@ -121,8 +121,10 @@ func (oRoute OpRoute) InfoStatusHtml() string {
 	return fmt.Sprint(
 		createInfo(oRoute.GetKind(), oRoute.GetName()),
 		createLabelBadges(oRoute.Route.Labels),
-		createStatusButton("secondary", fmt.Sprintf("Host=%s", oRoute.Route.Spec.Host)),
-		createStatusButton("secondary", fmt.Sprintf("To=%s", oRoute.Route.Spec.To.Name)),
+		createStatusButton("secondary", fmt.Sprint("Host",
+			createBadge("light", oRoute.Route.Spec.Host))),
+		createStatusButton("secondary", fmt.Sprint("To",
+			createBadge("light", oRoute.Route.Spec.To.Name))),
 	)
 }
 
