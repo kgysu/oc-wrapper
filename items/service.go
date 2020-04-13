@@ -93,7 +93,7 @@ func (oService *OpService) Delete(namespace string, restConf *rest.Config, optio
 	return nil
 }
 
-func (oService *OpService) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+func (oService *OpService) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
 	return fmt.Errorf("")
 }
 

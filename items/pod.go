@@ -79,7 +79,7 @@ func (oPod *OpPod) Delete(namespace string, restConf *rest.Config, options *v12.
 	return nil
 }
 
-func (oPod *OpPod) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+func (oPod *OpPod) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
 	return fmt.Errorf("")
 }
 

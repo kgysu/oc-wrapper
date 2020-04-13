@@ -91,7 +91,7 @@ func (oRoute *OpRoute) Delete(namespace string, restConf *rest.Config, options *
 	return nil
 }
 
-func (oRoute *OpRoute) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+func (oRoute *OpRoute) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
 	return fmt.Errorf("")
 }
 

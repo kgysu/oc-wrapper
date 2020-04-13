@@ -91,7 +91,7 @@ func (oDeploymentConfig OpDeploymentConfig) Delete(namespace string, restConf *r
 	return nil
 }
 
-func (oDeploymentConfig OpDeploymentConfig) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+func (oDeploymentConfig OpDeploymentConfig) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
 	DeploymentConfigInterface, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
@@ -100,7 +100,7 @@ func (oDeploymentConfig OpDeploymentConfig) UpdateScale(replicas int, namespace 
 	if err != nil {
 		return err
 	}
-	toUpdate.Spec.Replicas = int32(replicas)
+	toUpdate.Spec.Replicas = replicas
 	_, err = DeploymentConfigInterface.Update(toUpdate)
 	if err != nil {
 		return err
