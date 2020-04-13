@@ -91,6 +91,21 @@ func (oRoute *OpRoute) Delete(namespace string, restConf *rest.Config, options *
 	return nil
 }
 
+func (oRoute OpRoute) Update(namespace string, restConf *rest.Config) error {
+	RouteInterface, err := v3.GetRoutesInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	_, err = RouteInterface.Update(oRoute.Route)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (oRoute *OpRoute) Scale(replicas int) {
+}
+
 func (oRoute *OpRoute) String() string {
 	return fmt.Sprintf("%s %s \n", oRoute.Info(), oRoute.Status())
 }

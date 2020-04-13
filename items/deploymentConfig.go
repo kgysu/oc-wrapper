@@ -91,6 +91,22 @@ func (oDeploymentConfig OpDeploymentConfig) Delete(namespace string, restConf *r
 	return nil
 }
 
+func (oDeploymentConfig OpDeploymentConfig) Update(namespace string, restConf *rest.Config) error {
+	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	_, err = DeploymentConfigInterface.Update(oDeploymentConfig.DeploymentConfig)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (oDeploymentConfig *OpDeploymentConfig) Scale(replicas int) {
+	oDeploymentConfig.DeploymentConfig.Spec.Replicas = int32(replicas)
+}
+
 func (oDeploymentConfig OpDeploymentConfig) String() string {
 	return fmt.Sprintf("%s %s \n", oDeploymentConfig.Info(), oDeploymentConfig.Status())
 }

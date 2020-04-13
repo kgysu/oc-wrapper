@@ -93,6 +93,21 @@ func (oService *OpService) Delete(namespace string, restConf *rest.Config, optio
 	return nil
 }
 
+func (oService OpService) Update(namespace string, restConf *rest.Config) error {
+	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	_, err = ServiceInterface.Update(oService.Service)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (oService *OpService) Scale(replicas int) {
+}
+
 func (oService *OpService) String() string {
 	return fmt.Sprintf("%s %s \n", oService.Info(), oService.Status())
 }

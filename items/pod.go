@@ -3,7 +3,6 @@ package items
 import (
 	"fmt"
 	"github.com/kgysu/oc-wrapper/converter"
-	"github.com/kgysu/oc-wrapper/files"
 	v3 "github.com/kgysu/oc-wrapper/v3"
 	v1 "k8s.io/api/core/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -36,23 +35,10 @@ func (oPod *OpPod) GetFileName() string {
 }
 
 func (oPod *OpPod) WriteToFile(file string) error {
-	yamlContent, err := oPod.ToYaml()
-	if err != nil {
-		return err
-	}
-	return files.CreateFile(file, []byte(yamlContent))
+	return nil
 }
 
 func (oPod *OpPod) LoadFromFile(file string, envs map[string]string) error {
-	tempData, err := files.ReadFile(file)
-	if err != nil {
-		return err
-	}
-	data := files.ReplaceEnvs(string(tempData), envs)
-	err = oPod.FromData([]byte(data))
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -91,6 +77,21 @@ func (oPod *OpPod) Delete(namespace string, restConf *rest.Config, options *v12.
 		return err
 	}
 	return nil
+}
+
+func (oPod OpPod) Update(namespace string, restConf *rest.Config) error {
+	PodInterface, err := v3.GetPodsInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	_, err = PodInterface.Update(oPod.Pod)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (oPod *OpPod) Scale(replicas int) {
 }
 
 func (oPod *OpPod) String() string {
