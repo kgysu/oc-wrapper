@@ -128,13 +128,13 @@ func (oPod OpPod) InfoStatusHtml() string {
 		createInfo(oPod.GetKind(), oPod.GetName()),
 		createLabelBadges(oPod.Pod.Labels),
 		createStatusButton(phaseStatus, fmt.Sprintf("%s", oPod.Pod.Status.Phase)),
-		createStatusButton("secondary", fmt.Sprint("StartTime",
+		createStatusButton("secondary", fmt.Sprint("StartTime ",
 			createBadge("light", fmt.Sprintf("%s", oPod.Pod.Status.StartTime)))),
-		createStatusButton("secondary", fmt.Sprint("HostIP",
+		createStatusButton("secondary", fmt.Sprint("HostIP ",
 			createBadge("light", oPod.Pod.Status.HostIP))),
-		createStatusButton("secondary", fmt.Sprint("PodIP",
+		createStatusButton("secondary", fmt.Sprint("PodIP ",
 			createBadge("light", oPod.Pod.Status.PodIP))),
-		createStatusButton("secondary", fmt.Sprint("Message",
+		createStatusButton("secondary", fmt.Sprint("Message ",
 			createBadge("light", oPod.Pod.Status.Message))),
 	)
 }

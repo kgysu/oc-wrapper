@@ -133,13 +133,13 @@ func (oService OpService) InfoStatusHtml() string {
 	return fmt.Sprint(
 		createInfo(oService.GetKind(), oService.GetName()),
 		createLabelBadges(oService.Service.Labels),
-		createStatusButton("secondary", fmt.Sprint("ClusterIP",
+		createStatusButton("secondary", fmt.Sprint("ClusterIP ",
 			createBadge("light", oService.Service.Spec.ClusterIP))),
-		createStatusButton("secondary", fmt.Sprint("LoadBalancerIP",
+		createStatusButton("secondary", fmt.Sprint("LoadBalancerIP ",
 			createBadge("light", oService.Service.Spec.LoadBalancerIP))),
-		createStatusButton("secondary", fmt.Sprint("Type",
+		createStatusButton("secondary", fmt.Sprint("Type ",
 			createBadge("light", fmt.Sprint(oService.Service.Spec.Type)))),
-		createStatusButton("secondary", fmt.Sprint("PublishNotReadyAddresses",
+		createStatusButton("secondary", fmt.Sprint("PublishNotReadyAddresses ",
 			createBadge("light", fmt.Sprintf("%v", oService.Service.Spec.PublishNotReadyAddresses)))),
 	)
 }
