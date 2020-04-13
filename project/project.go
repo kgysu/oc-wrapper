@@ -1,5 +1,7 @@
 package project
 
+import "strings"
+
 type OpenshiftProject struct {
 	Name         string
 	Label        string
@@ -21,4 +23,14 @@ func (op OpenshiftProject) GetItem(kind string, name string) OpenshiftItemInterf
 		}
 	}
 	return nil
+}
+
+func (op OpenshiftProject) GetItemsByKinds(kinds string) []OpenshiftItemInterface {
+	var result []OpenshiftItemInterface
+	for _, item := range op.Items {
+		if strings.Contains(kinds, item.GetKind()) || kinds == "" {
+			result = append(result, item)
+		}
+	}
+	return result
 }
