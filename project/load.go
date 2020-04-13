@@ -38,6 +38,11 @@ func NewProjectFromDisk(currentDir string, projectName string, namespace string)
 		return nil, err
 	}
 
+	err = fileutils.CreateIfNotExists(envsDir)
+	if err != nil {
+		return nil, err
+	}
+
 	yamlFiles, err := fileutils.FilesInDir(projectDir)
 	if err != nil {
 		return nil, err

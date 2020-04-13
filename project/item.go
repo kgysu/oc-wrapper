@@ -20,9 +20,8 @@ type OpenshiftItemInterface interface {
 	Status() string
 	InfoStatusHtml() string
 	Create(namespace string, restConf *rest.Config) error
-	Update(namespace string, restConf *rest.Config) error
 	Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error
-	Scale(replicas int)
+	UpdateScale(replicas int, namespace string, restConf *rest.Config) error
 	GetName() string
 	GetKind() string
 	ToYaml() (string, error)

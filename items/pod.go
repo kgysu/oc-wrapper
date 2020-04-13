@@ -2,8 +2,8 @@ package items
 
 import (
 	"fmt"
+	"github.com/kgysu/oc-wrapper/client"
 	"github.com/kgysu/oc-wrapper/converter"
-	v3 "github.com/kgysu/oc-wrapper/v3"
 	v1 "k8s.io/api/core/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
@@ -43,7 +43,7 @@ func (oPod *OpPod) LoadFromFile(file string, envs map[string]string) error {
 }
 
 func (oPod *OpPod) Get(namespace string, restConf *rest.Config, name string) error {
-	PodInterface, err := v3.GetPodsInterface(namespace, restConf)
+	PodInterface, err := client.GetPodsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (oPod *OpPod) Get(namespace string, restConf *rest.Config, name string) err
 }
 
 func (oPod *OpPod) Create(namespace string, restConf *rest.Config) error {
-	PodInterface, err := v3.GetPodsInterface(namespace, restConf)
+	PodInterface, err := client.GetPodsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (oPod *OpPod) Create(namespace string, restConf *rest.Config) error {
 }
 
 func (oPod *OpPod) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
-	PodInterface, err := v3.GetPodsInterface(namespace, restConf)
+	PodInterface, err := client.GetPodsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -79,19 +79,8 @@ func (oPod *OpPod) Delete(namespace string, restConf *rest.Config, options *v12.
 	return nil
 }
 
-func (oPod OpPod) Update(namespace string, restConf *rest.Config) error {
-	PodInterface, err := v3.GetPodsInterface(namespace, restConf)
-	if err != nil {
-		return err
-	}
-	_, err = PodInterface.Update(oPod.Pod)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (oPod *OpPod) Scale(replicas int) {
+func (oPod *OpPod) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+	return fmt.Errorf("")
 }
 
 func (oPod *OpPod) String() string {

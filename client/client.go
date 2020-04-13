@@ -1,4 +1,4 @@
-package v3
+package client
 
 import (
 	v1 "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"

@@ -2,9 +2,9 @@ package items
 
 import (
 	"fmt"
+	"github.com/kgysu/oc-wrapper/client"
 	"github.com/kgysu/oc-wrapper/converter"
 	"github.com/kgysu/oc-wrapper/fileutils"
-	v3 "github.com/kgysu/oc-wrapper/v3"
 	v1 "github.com/openshift/api/route/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
@@ -55,7 +55,7 @@ func (oRoute *OpRoute) LoadFromFile(file string, envs map[string]string) error {
 }
 
 func (oRoute *OpRoute) Get(namespace string, restConf *rest.Config, name string) error {
-	RouteInterface, err := v3.GetRoutesInterface(namespace, restConf)
+	RouteInterface, err := client.GetRoutesInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (oRoute *OpRoute) Get(namespace string, restConf *rest.Config, name string)
 }
 
 func (oRoute *OpRoute) Create(namespace string, restConf *rest.Config) error {
-	RouteInterface, err := v3.GetRoutesInterface(namespace, restConf)
+	RouteInterface, err := client.GetRoutesInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (oRoute *OpRoute) Create(namespace string, restConf *rest.Config) error {
 }
 
 func (oRoute *OpRoute) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
-	RouteInterface, err := v3.GetRoutesInterface(namespace, restConf)
+	RouteInterface, err := client.GetRoutesInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -91,19 +91,8 @@ func (oRoute *OpRoute) Delete(namespace string, restConf *rest.Config, options *
 	return nil
 }
 
-func (oRoute OpRoute) Update(namespace string, restConf *rest.Config) error {
-	RouteInterface, err := v3.GetRoutesInterface(namespace, restConf)
-	if err != nil {
-		return err
-	}
-	_, err = RouteInterface.Update(oRoute.Route)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (oRoute *OpRoute) Scale(replicas int) {
+func (oRoute *OpRoute) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+	return fmt.Errorf("")
 }
 
 func (oRoute *OpRoute) String() string {

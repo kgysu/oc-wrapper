@@ -2,9 +2,9 @@ package items
 
 import (
 	"fmt"
+	"github.com/kgysu/oc-wrapper/client"
 	"github.com/kgysu/oc-wrapper/converter"
 	"github.com/kgysu/oc-wrapper/fileutils"
-	v3 "github.com/kgysu/oc-wrapper/v3"
 	v1 "k8s.io/api/core/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
@@ -57,7 +57,7 @@ func (oService *OpService) LoadFromFile(file string, envs map[string]string) err
 }
 
 func (oService *OpService) Get(namespace string, restConf *rest.Config, name string) error {
-	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
+	ServiceInterface, err := client.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func (oService *OpService) Get(namespace string, restConf *rest.Config, name str
 }
 
 func (oService *OpService) Create(namespace string, restConf *rest.Config) error {
-	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
+	ServiceInterface, err := client.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -82,7 +82,7 @@ func (oService *OpService) Create(namespace string, restConf *rest.Config) error
 }
 
 func (oService *OpService) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
-	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
+	ServiceInterface, err := client.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -93,19 +93,8 @@ func (oService *OpService) Delete(namespace string, restConf *rest.Config, optio
 	return nil
 }
 
-func (oService OpService) Update(namespace string, restConf *rest.Config) error {
-	ServiceInterface, err := v3.GetServicesInterface(namespace, restConf)
-	if err != nil {
-		return err
-	}
-	_, err = ServiceInterface.Update(oService.Service)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (oService *OpService) Scale(replicas int) {
+func (oService *OpService) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+	return fmt.Errorf("")
 }
 
 func (oService *OpService) String() string {

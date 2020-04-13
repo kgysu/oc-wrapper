@@ -2,9 +2,9 @@ package items
 
 import (
 	"fmt"
+	"github.com/kgysu/oc-wrapper/client"
 	"github.com/kgysu/oc-wrapper/converter"
 	"github.com/kgysu/oc-wrapper/fileutils"
-	v3 "github.com/kgysu/oc-wrapper/v3"
 	v1 "github.com/openshift/api/apps/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
@@ -55,7 +55,7 @@ func (oDeploymentConfig OpDeploymentConfig) LoadFromFile(file string, envs map[s
 }
 
 func (oDeploymentConfig *OpDeploymentConfig) Get(namespace string, restConf *rest.Config, name string) error {
-	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	DeploymentConfigInterface, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (oDeploymentConfig *OpDeploymentConfig) Get(namespace string, restConf *res
 }
 
 func (oDeploymentConfig OpDeploymentConfig) Create(namespace string, restConf *rest.Config) error {
-	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	DeploymentConfigInterface, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (oDeploymentConfig OpDeploymentConfig) Create(namespace string, restConf *r
 }
 
 func (oDeploymentConfig OpDeploymentConfig) Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error {
-	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	DeploymentConfigInterface, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
@@ -91,34 +91,35 @@ func (oDeploymentConfig OpDeploymentConfig) Delete(namespace string, restConf *r
 	return nil
 }
 
-func (oDeploymentConfig OpDeploymentConfig) Update(namespace string, restConf *rest.Config) error {
-	DeploymentConfigInterface, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+func (oDeploymentConfig OpDeploymentConfig) UpdateScale(replicas int, namespace string, restConf *rest.Config) error {
+	DeploymentConfigInterface, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return err
 	}
-	_, err = DeploymentConfigInterface.Update(oDeploymentConfig.DeploymentConfig)
+	toUpdate, err := DeploymentConfigInterface.Get(oDeploymentConfig.GetName(), v12.GetOptions{})
+	if err != nil {
+		return err
+	}
+	toUpdate.Spec.Replicas = int32(replicas)
+	_, err = DeploymentConfigInterface.Update(toUpdate)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (oDeploymentConfig *OpDeploymentConfig) Scale(replicas int) {
-	oDeploymentConfig.DeploymentConfig.Spec.Replicas = int32(replicas)
-}
-
 func (oDeploymentConfig OpDeploymentConfig) String() string {
-	return fmt.Sprintf("%s %s \n", oDeploymentConfig.Info(), oDeploymentConfig.Status())
+	return fmt.Sprintf("%s %s", oDeploymentConfig.Info(), oDeploymentConfig.Status())
 }
 
 func (oDeploymentConfig OpDeploymentConfig) Info() string {
-	return fmt.Sprintf("[%s] %s ",
+	return fmt.Sprintf("[%s] %s",
 		oDeploymentConfig.GetKind(),
 		oDeploymentConfig.GetName())
 }
 
 func (oDeploymentConfig OpDeploymentConfig) Status() string {
-	return fmt.Sprintf("%d (%d/%d) ",
+	return fmt.Sprintf("%d (%d/%d)",
 		oDeploymentConfig.DeploymentConfig.Spec.Replicas,
 		oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas,
 		oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas)

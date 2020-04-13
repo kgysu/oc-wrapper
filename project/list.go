@@ -1,8 +1,8 @@
 package project
 
 import (
+	"github.com/kgysu/oc-wrapper/client"
 	"github.com/kgysu/oc-wrapper/items"
-	v3 "github.com/kgysu/oc-wrapper/v3"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 )
@@ -38,7 +38,7 @@ func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) (
 
 // Todo add more Types
 func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
-	api, err := v3.GetDeploymentConfigsInterface(namespace, restConf)
+	api, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.
 }
 
 func ListServices(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
-	api, err := v3.GetServicesInterface(namespace, restConf)
+	api, err := client.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func ListServices(namespace string, restConf *rest.Config, options v12.ListOptio
 }
 
 func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
-	api, err := v3.GetRoutesInterface(namespace, restConf)
+	api, err := client.GetRoutesInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions
 }
 
 func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
-	api, err := v3.GetPodsInterface(namespace, restConf)
+	api, err := client.GetPodsInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
 	}
