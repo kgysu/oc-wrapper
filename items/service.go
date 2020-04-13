@@ -128,19 +128,16 @@ func (oService *OpService) Status() string {
 func (oService OpService) InfoStatusHtml() string {
 	ports := ""
 	for _, port := range oService.Service.Spec.Ports {
-		ports = ports + fmt.Sprintf("<span class=\"badge badge-secondary\">%s (%d)</span>", port.Name, port.Port)
+		ports = ports + createBadge("secondary", fmt.Sprintf("%s (%d)", port.Name, port.Port))
 	}
-	return fmt.Sprintf(`<b>%s: %s</b> %s <div class="float-right"><span class="badge badge-secondary">%s</span> 
-<span class="badge badge-secondary">%s</span> <span class="badge badge-secondary">%s</span> 
-<span class="badge badge-secondary">%v</span> %s </div>`,
-		oService.GetKind(),
-		oService.GetName(),
-		getLabelBadges(oService.Service.Labels),
-		oService.Service.Spec.ClusterIP,
-		oService.Service.Spec.LoadBalancerIP,
-		oService.Service.Spec.Type,
-		oService.Service.Spec.PublishNotReadyAddresses,
-		ports)
+	return fmt.Sprint(
+		createInfo(oService.GetKind(), oService.GetName()),
+		createLabelBadges(oService.Service.Labels),
+		createStatusButton("secondary", fmt.Sprintf("ClusterIP=%s", oService.Service.Spec.ClusterIP)),
+		createStatusButton("secondary", fmt.Sprintf("LoadBalancerIP=%s", oService.Service.Spec.LoadBalancerIP)),
+		createStatusButton("secondary", fmt.Sprintf("Type=%s", oService.Service.Spec.Type)),
+		createStatusButton("secondary", fmt.Sprintf("PublishNotReadyAddresses=%s", oService.Service.Spec.PublishNotReadyAddresses)),
+	)
 }
 
 func (oService *OpService) GetName() string {

@@ -124,18 +124,15 @@ func (oPod OpPod) InfoStatusHtml() string {
 	if v1.PodUnknown == oPod.Pod.Status.Phase {
 		phaseStatus = "secondary"
 	}
-	return fmt.Sprintf(`<b>%s: %s</b> %s <div class="float-right"><span class="badge badge-%s"">%s</span> 
-<span class="badge badge-secondary">%s</span> <span class="badge badge-secondary">%s</span> 
-<span class="badge badge-secondary">%s</span> %s </div>`,
-		oPod.GetKind(),
-		oPod.GetName(),
-		getLabelBadges(oPod.Pod.Labels),
-		phaseStatus,
-		oPod.Pod.Status.Phase,
-		oPod.Pod.Status.StartTime,
-		oPod.Pod.Status.HostIP,
-		oPod.Pod.Status.PodIP,
-		oPod.Pod.Status.Message)
+	return fmt.Sprint(
+		createInfo(oPod.GetKind(), oPod.GetName()),
+		createLabelBadges(oPod.Pod.Labels),
+		createStatusButton("secondary", fmt.Sprintf("Phase=%s", oPod.Pod.Status.Phase)),
+		createStatusButton("secondary", fmt.Sprintf("StartTime=%s", oPod.Pod.Status.StartTime)),
+		createStatusButton("secondary", fmt.Sprintf("HostIP=%s", oPod.Pod.Status.HostIP)),
+		createStatusButton("secondary", fmt.Sprintf("PodIP=%s", oPod.Pod.Status.PodIP)),
+		createStatusButton("secondary", fmt.Sprintf("Message=%s", oPod.Pod.Status.Message)),
+	)
 }
 
 func (oPod *OpPod) GetName() string {

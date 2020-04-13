@@ -138,20 +138,14 @@ func (oDeploymentConfig OpDeploymentConfig) InfoStatusHtml() string {
 	if oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas == oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas {
 		readyStatus = "success"
 	}
-	return fmt.Sprintf(`<b>%s: %s</b> %s <button type="button" class="btn btn-sm btn-%s float-right">
-  Replicas <span class="badge badge-light">%d</span>
-</button> <button type="button" class="btn btn-sm btn-%s float-right">
-  Status <span class="badge badge-light">(%d/%d)</span>
-</button>
-`,
-		oDeploymentConfig.GetKind(),
-		oDeploymentConfig.GetName(),
-		getLabelBadges(oDeploymentConfig.DeploymentConfig.Labels),
-		replicasStatus,
-		oDeploymentConfig.DeploymentConfig.Spec.Replicas,
-		readyStatus,
-		oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas,
-		oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas)
+	return fmt.Sprint(
+		createInfo(oDeploymentConfig.GetKind(), oDeploymentConfig.GetName()),
+		createLabelBadges(oDeploymentConfig.DeploymentConfig.Labels),
+		createStatusButton(replicasStatus,
+			createBadge("light", fmt.Sprintf("%d", oDeploymentConfig.DeploymentConfig.Spec.Replicas))),
+		createStatusButton(readyStatus,
+			createBadge("light", fmt.Sprintf("(%d/%d)", oDeploymentConfig.DeploymentConfig.Status.ReadyReplicas, oDeploymentConfig.DeploymentConfig.Status.AvailableReplicas))),
+	)
 }
 
 func (oDeploymentConfig OpDeploymentConfig) GetName() string {
