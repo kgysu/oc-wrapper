@@ -2,7 +2,6 @@ package client
 
 import (
 	"fmt"
-	"github.com/kgysu/oc-wrapper/config"
 	appsv1client "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"
 	routev1client "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
 	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
@@ -44,11 +43,11 @@ func GetRbacV1Client(restConf *rest.Config) (*rbacv1client.RbacV1Client, error) 
 	return client, nil
 }
 
-func GetNamespace(fromEnv bool) string {
+func GetNamespace(fromEnv bool, envVarName string) string {
 	if fromEnv {
-		namespace := os.Getenv(config.GetNamespaceEnvNameOrDefault())
+		namespace := os.Getenv(envVarName)
 		if namespace == "" {
-			panic("NAMESPACE was not set")
+			panic(envVarName + ", namespace is not defined")
 		}
 		return namespace
 	} else {
