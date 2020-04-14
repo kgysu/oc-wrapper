@@ -11,7 +11,7 @@ func createLabelBadges(labels map[string]string) string {
 }
 
 func createInfo(kind string, name string) string {
-	return fmt.Sprintf("<b>%s: %s</b>", kind, name)
+	return fmt.Sprintf("<b>%s: %s</b> ", kind, name)
 }
 
 func createStatusButton(status, content string) string {

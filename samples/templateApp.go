@@ -1,8 +1,9 @@
 package samples
 
 import (
+	"github.com/kgysu/oc-wrapper/appitem"
+	"github.com/kgysu/oc-wrapper/application"
 	"github.com/kgysu/oc-wrapper/items"
-	"github.com/kgysu/oc-wrapper/project"
 	v1 "github.com/openshift/api/apps/v1"
 	v13 "github.com/openshift/api/route/v1"
 	v12 "k8s.io/api/core/v1"
@@ -11,11 +12,15 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
-func GetTemplateProject(name string) project.OpenshiftProject {
-	return project.OpenshiftProject{
-		Name:         name,
-		Environments: nil,
-		Items: []project.OpenshiftItemInterface{
+func GetSampleApp() application.Application {
+	return GetTemplateApp("sample")
+}
+
+func GetTemplateApp(name string) application.Application {
+	return application.Application{
+		Name:  name,
+		Label: "app=" + name,
+		Items: []appitem.AppItem{
 			items.NewOpDeploymentConfig(GetTemplateDeploymentConfig(name)),
 			items.NewOpService(GetTemplateService(name)),
 			items.NewOpRoute(GetTemplateRoute(name)),

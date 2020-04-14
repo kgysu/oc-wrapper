@@ -1,8 +1,8 @@
-package project
+package application
 
 // TODO try this
 //type OpenshiftInterface interface {
-//	Deploy(items []OpenshiftItemInterface)
+//	Deploy(items []AppItem)
 //}
 //
 //type OpDeploymentConfigApi struct {
@@ -23,7 +23,7 @@ package project
 //	return &OpDeploymentConfigApi{api:dcApi}
 //}
 //
-//func (api OpDeploymentConfigApi) Deploy(items []OpenshiftItemInterface){
+//func (api OpDeploymentConfigApi) Deploy(items []AppItem){
 //
 //	api.api.Create(items[0].Create())
 //}

@@ -1,4 +1,4 @@
-package project
+package application
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-func (op *OpenshiftProject) CreateItems(w io.Writer, namespace string, restConf *rest.Config) {
-	for _, item := range op.Items {
+func (app *Application) CreateItems(w io.Writer, namespace string, restConf *rest.Config) {
+	for _, item := range app.Items {
 		err := item.Create(namespace, restConf)
 		if err != nil {
 			// only Print on Error

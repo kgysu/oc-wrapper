@@ -1,4 +1,4 @@
-package project
+package appitem
 
 import (
 	"github.com/kgysu/oc-wrapper/client"
@@ -7,8 +7,8 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
-	var resultItems []OpenshiftItemInterface
+func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
+	var resultItems []AppItem
 	dcs, err := ListDeploymentConfigs(namespace, restConf, options)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) (
 }
 
 // Todo add more Types
-func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
+func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
 	api, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -46,14 +46,14 @@ func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []OpenshiftItemInterface
+	var resultItems []AppItem
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpDeploymentConfig(it))
 	}
 	return resultItems, nil
 }
 
-func ListServices(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
+func ListServices(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
 	api, err := client.GetServicesInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -62,14 +62,14 @@ func ListServices(namespace string, restConf *rest.Config, options v12.ListOptio
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []OpenshiftItemInterface
+	var resultItems []AppItem
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpService(it))
 	}
 	return resultItems, nil
 }
 
-func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
+func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
 	api, err := client.GetRoutesInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -78,14 +78,14 @@ func ListRoutes(namespace string, restConf *rest.Config, options v12.ListOptions
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []OpenshiftItemInterface
+	var resultItems []AppItem
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpRoute(it))
 	}
 	return resultItems, nil
 }
 
-func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) ([]OpenshiftItemInterface, error) {
+func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
 	api, err := client.GetPodsInterface(namespace, restConf)
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) 
 	if err != nil {
 		return nil, err
 	}
-	var resultItems []OpenshiftItemInterface
+	var resultItems []AppItem
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpPod(it))
 	}

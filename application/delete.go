@@ -1,4 +1,4 @@
-package project
+package application
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-func (op *OpenshiftProject) DeleteItems(w io.Writer, namespace string, restConf *rest.Config, options *v12.DeleteOptions) {
-	for _, item := range op.Items {
+func (app *Application) DeleteItems(w io.Writer, namespace string, restConf *rest.Config, options *v12.DeleteOptions) {
+	for _, item := range app.Items {
 		err := item.Delete(namespace, restConf, options)
 		if err != nil {
 			// only Print on Error

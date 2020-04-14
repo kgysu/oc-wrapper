@@ -1,4 +1,4 @@
-package project
+package application
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-func (op *OpenshiftProject) ScaleItems(replicas int32, w io.Writer, namespace string, restConf *rest.Config) {
-	for _, item := range op.Items {
+func (app *Application) ScaleItems(replicas int32, w io.Writer, namespace string, restConf *rest.Config) {
+	for _, item := range app.Items {
 		err := item.UpdateScale(replicas, namespace, restConf)
 		if err != nil {
 			// only Print on Error
@@ -18,8 +18,8 @@ func (op *OpenshiftProject) ScaleItems(replicas int32, w io.Writer, namespace st
 	}
 }
 
-func (op *OpenshiftProject) ScaleItemsDefault(w io.Writer, namespace string, restConf *rest.Config) {
-	for _, item := range op.Items {
+func (app *Application) ScaleItemsDefault(w io.Writer, namespace string, restConf *rest.Config) {
+	for _, item := range app.Items {
 		err := item.UpdateScale(item.GetScale(), namespace, restConf)
 		if err != nil {
 			// only Print on Error

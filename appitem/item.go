@@ -1,4 +1,4 @@
-package project
+package appitem
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-type OpenshiftItemInterface interface {
+type AppItem interface {
 	WriteToFile(file string) error
 	LoadFromFile(file string, envs map[string]string) error
 	GetFileName() string
@@ -29,7 +29,7 @@ type OpenshiftItemInterface interface {
 	FromData(data []byte) error
 }
 
-func NewOpenshiftItemFromFile(file string, envs map[string]string) (OpenshiftItemInterface, error) {
+func NewAppItemFromFile(file string, envs map[string]string) (AppItem, error) {
 	if strings.HasSuffix(file, "DeploymentConfig.yaml") {
 		item := items.NewOpDeploymentConfig(v1.DeploymentConfig{})
 		err := item.LoadFromFile(file, envs)
