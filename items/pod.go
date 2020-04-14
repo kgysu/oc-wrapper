@@ -88,7 +88,7 @@ func (oPod *OpPod) GetScale() int32 {
 }
 
 func (oPod *OpPod) String() string {
-	return fmt.Sprintf("%s %s \n", oPod.Info(), oPod.Status())
+	return fmt.Sprintf("%s %s ", oPod.Info(), oPod.Status())
 }
 
 func (oPod *OpPod) Info() string {

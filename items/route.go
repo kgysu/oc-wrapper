@@ -100,7 +100,7 @@ func (oRoute *OpRoute) GetScale() int32 {
 }
 
 func (oRoute *OpRoute) String() string {
-	return fmt.Sprintf("%s %s \n", oRoute.Info(), oRoute.Status())
+	return fmt.Sprintf("%s %s ", oRoute.Info(), oRoute.Status())
 }
 
 func (oRoute *OpRoute) Info() string {

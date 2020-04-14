@@ -113,7 +113,7 @@ func (oDeploymentConfig OpDeploymentConfig) GetScale() int32 {
 }
 
 func (oDeploymentConfig OpDeploymentConfig) String() string {
-	return fmt.Sprintf("%s %s", oDeploymentConfig.Info(), oDeploymentConfig.Status())
+	return fmt.Sprintf("%s %s ", oDeploymentConfig.Info(), oDeploymentConfig.Status())
 }
 
 func (oDeploymentConfig OpDeploymentConfig) Info() string {

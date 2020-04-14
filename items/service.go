@@ -102,7 +102,7 @@ func (oService *OpService) GetScale() int32 {
 }
 
 func (oService *OpService) String() string {
-	return fmt.Sprintf("%s %s \n", oService.Info(), oService.Status())
+	return fmt.Sprintf("%s %s ", oService.Info(), oService.Status())
 }
 
 func (oService *OpService) Info() string {
