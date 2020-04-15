@@ -21,8 +21,10 @@ type AppItem interface {
 	InfoStatusHtml() string
 	Create(namespace string, restConf *rest.Config) error
 	Delete(namespace string, restConf *rest.Config, options *v12.DeleteOptions) error
+	Update(namespace string, restConf *rest.Config) error
 	UpdateScale(replicas int32, namespace string, restConf *rest.Config) error
 	GetScale() int32
+	IsScalable() bool
 	GetName() string
 	GetKind() string
 	ToYaml() (string, error)

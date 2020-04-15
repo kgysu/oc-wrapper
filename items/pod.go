@@ -79,12 +79,20 @@ func (oPod *OpPod) Delete(namespace string, restConf *rest.Config, options *v12.
 	return nil
 }
 
-func (oPod *OpPod) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
+func (oPod *OpPod) Update(namespace string, restConf *rest.Config) error {
 	return fmt.Errorf("")
+}
+
+func (oPod *OpPod) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
+	return nil
 }
 
 func (oPod *OpPod) GetScale() int32 {
 	return 0
+}
+
+func (oPod *OpPod) IsScalable() bool {
+	return false
 }
 
 func (oPod *OpPod) String() string {

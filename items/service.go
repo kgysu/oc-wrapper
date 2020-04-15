@@ -93,12 +93,33 @@ func (oService *OpService) Delete(namespace string, restConf *rest.Config, optio
 	return nil
 }
 
+func (oService OpService) Update(namespace string, restConf *rest.Config) error {
+	ServiceInterface, err := client.GetServicesInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	toUpdate, err := ServiceInterface.Get(oService.GetName(), v12.GetOptions{})
+	if err != nil {
+		return err
+	}
+	toUpdate.Spec = oService.Service.Spec
+	_, err = ServiceInterface.Update(toUpdate)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (oService *OpService) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
-	return fmt.Errorf("")
+	return nil
 }
 
 func (oService *OpService) GetScale() int32 {
 	return 0
+}
+
+func (oService *OpService) IsScalable() bool {
+	return false
 }
 
 func (oService *OpService) String() string {

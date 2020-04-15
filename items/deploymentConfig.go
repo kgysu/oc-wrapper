@@ -91,6 +91,23 @@ func (oDeploymentConfig OpDeploymentConfig) Delete(namespace string, restConf *r
 	return nil
 }
 
+func (oDeploymentConfig OpDeploymentConfig) Update(namespace string, restConf *rest.Config) error {
+	DeploymentConfigInterface, err := client.GetDeploymentConfigsInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	toUpdate, err := DeploymentConfigInterface.Get(oDeploymentConfig.GetName(), v12.GetOptions{})
+	if err != nil {
+		return err
+	}
+	toUpdate.Spec = oDeploymentConfig.DeploymentConfig.Spec
+	_, err = DeploymentConfigInterface.Update(toUpdate)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (oDeploymentConfig OpDeploymentConfig) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
 	DeploymentConfigInterface, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
@@ -110,6 +127,10 @@ func (oDeploymentConfig OpDeploymentConfig) UpdateScale(replicas int32, namespac
 
 func (oDeploymentConfig OpDeploymentConfig) GetScale() int32 {
 	return oDeploymentConfig.DeploymentConfig.Spec.Replicas
+}
+
+func (oDeploymentConfig OpDeploymentConfig) IsScalable() bool {
+	return true
 }
 
 func (oDeploymentConfig OpDeploymentConfig) String() string {

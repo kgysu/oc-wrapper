@@ -43,3 +43,13 @@ func (app Application) GetItemsByKinds(kinds string) []appitem.AppItem {
 	}
 	return result
 }
+
+func (app Application) GetScalableItems() []appitem.AppItem {
+	var result []appitem.AppItem
+	for _, item := range app.Items {
+		if item.IsScalable() {
+			result = append(result, item)
+		}
+	}
+	return result
+}

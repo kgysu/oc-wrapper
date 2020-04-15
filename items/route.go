@@ -91,12 +91,33 @@ func (oRoute *OpRoute) Delete(namespace string, restConf *rest.Config, options *
 	return nil
 }
 
+func (oRoute OpRoute) Update(namespace string, restConf *rest.Config) error {
+	RouteInterface, err := client.GetRoutesInterface(namespace, restConf)
+	if err != nil {
+		return err
+	}
+	toUpdate, err := RouteInterface.Get(oRoute.GetName(), v12.GetOptions{})
+	if err != nil {
+		return err
+	}
+	toUpdate.Spec = oRoute.Route.Spec
+	_, err = RouteInterface.Update(toUpdate)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (oRoute *OpRoute) UpdateScale(replicas int32, namespace string, restConf *rest.Config) error {
-	return fmt.Errorf("")
+	return nil
 }
 
 func (oRoute *OpRoute) GetScale() int32 {
 	return 0
+}
+
+func (oRoute *OpRoute) IsScalable() bool {
+	return false
 }
 
 func (oRoute *OpRoute) String() string {
