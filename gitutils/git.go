@@ -53,12 +53,22 @@ func moveFilesFromTempToParent(w io.Writer, tempDir string) error {
 		return err
 	}
 	for _, file := range files {
-		newPath := strings.Replace(file, gitTemp, "", 1)
-		err := os.Rename(file, newPath)
+		newFilePath := strings.Replace(file, gitTemp, "", 1)
+		err := fileutils.CreateIfNotExists(getParentFolder(newFilePath))
 		if err != nil {
 			return err
 		}
-		fmt.Fprintf(w, "success=[%s]\n", newPath)
+		err = os.Rename(file, newFilePath)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(w, "written=[%s]\n", newFilePath)
 	}
 	return nil
+}
+
+func getParentFolder(filePath string) string {
+	splittedPath := strings.Split(filePath, "/")
+	fileName := splittedPath[len(splittedPath)-1]
+	return strings.Replace(filePath, fileName, "", 1)
 }
