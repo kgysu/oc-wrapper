@@ -17,7 +17,10 @@ func GetTemplateStatefulSet(name string) v14.StatefulSet {
 			Annotations: map[string]string{"app": name},
 		},
 		Spec: v14.StatefulSetSpec{
-			Replicas:            &replicas,
+			Replicas: &replicas,
+			Selector: &metav1.LabelSelector{
+				MatchLabels: map[string]string{"app": name},
+			},
 			Template:            GetPodTemplateSpec(name),
 			ServiceName:         name,
 			PodManagementPolicy: v14.OrderedReadyPodManagement,

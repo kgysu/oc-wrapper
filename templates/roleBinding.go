@@ -22,12 +22,12 @@ func GetTemplateRoleBinding(name string) v15.RoleBinding {
 		Subjects: []v12.ObjectReference{
 			{
 				Kind: "ServiceAccount",
-				Name: "sa",
+				Name: name,
 			},
 		},
 		RoleRef: v12.ObjectReference{
 			Kind: "Role",
-			Name: "rolename",
+			Name: name,
 		},
 	}
 }
