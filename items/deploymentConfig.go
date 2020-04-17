@@ -101,6 +101,8 @@ func (oDeploymentConfig OpDeploymentConfig) Update(namespace string, restConf *r
 		return err
 	}
 	toUpdate.Spec = oDeploymentConfig.DeploymentConfig.Spec
+	toUpdate.Labels = oDeploymentConfig.DeploymentConfig.Labels
+	toUpdate.Name = oDeploymentConfig.DeploymentConfig.Name
 	_, err = DeploymentConfigInterface.Update(toUpdate)
 	if err != nil {
 		return err

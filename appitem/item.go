@@ -5,6 +5,7 @@ import (
 	"github.com/kgysu/oc-wrapper/items"
 	v1 "github.com/openshift/api/apps/v1"
 	v13 "github.com/openshift/api/route/v1"
+	v15 "k8s.io/api/apps/v1"
 	v14 "k8s.io/api/core/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
@@ -31,6 +32,7 @@ type AppItem interface {
 	FromData(data []byte) error
 }
 
+// TODO add more types
 func NewAppItemFromFile(file string, envs map[string]string) (AppItem, error) {
 	if strings.HasSuffix(file, "DeploymentConfig.yaml") {
 		item := items.NewOpDeploymentConfig(v1.DeploymentConfig{})
@@ -44,6 +46,16 @@ func NewAppItemFromFile(file string, envs map[string]string) (AppItem, error) {
 	}
 	if strings.HasSuffix(file, "Route.yaml") {
 		item := items.NewOpRoute(v13.Route{})
+		err := item.LoadFromFile(file, envs)
+		return item, err
+	}
+	if strings.HasSuffix(file, "ServiceAccount.yaml") {
+		item := items.NewOpServiceAccount(v14.ServiceAccount{})
+		err := item.LoadFromFile(file, envs)
+		return item, err
+	}
+	if strings.HasSuffix(file, "StatefulSet.yaml") {
+		item := items.NewOpStatefulSet(v15.StatefulSet{})
 		err := item.LoadFromFile(file, envs)
 		return item, err
 	}

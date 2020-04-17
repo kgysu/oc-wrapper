@@ -4,12 +4,39 @@ import (
 	"fmt"
 	appsv1client "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"
 	routev1client "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
+	kubeappsv1client "k8s.io/client-go/kubernetes/typed/apps/v1"
+	appsv1beta1client "k8s.io/client-go/kubernetes/typed/apps/v1beta1"
+	appsv1beta2client "k8s.io/client-go/kubernetes/typed/apps/v1beta2"
 	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
 	rbacv1client "k8s.io/client-go/kubernetes/typed/rbac/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 )
+
+func GetKubeAppsV1Client(restConf *rest.Config) (*kubeappsv1client.AppsV1Client, error) {
+	client, err := kubeappsv1client.NewForConfig(restConf)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
+func GetKubeAppsV1Beta1Client(restConf *rest.Config) (*appsv1beta1client.AppsV1beta1Client, error) {
+	client, err := appsv1beta1client.NewForConfig(restConf)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
+func GetKubeAppsV1Beta2Client(restConf *rest.Config) (*appsv1beta2client.AppsV1beta2Client, error) {
+	client, err := appsv1beta2client.NewForConfig(restConf)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
 
 func GetAppsV1Client(restConf *rest.Config) (*appsv1client.AppsV1Client, error) {
 	client, err := appsv1client.NewForConfig(restConf)

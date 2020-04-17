@@ -3,6 +3,7 @@ package client
 import (
 	v1 "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"
 	v13 "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
+	v15 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	v12 "k8s.io/client-go/kubernetes/typed/core/v1"
 	v14 "k8s.io/client-go/kubernetes/typed/rbac/v1"
 	"k8s.io/client-go/rest"
@@ -14,6 +15,14 @@ func GetDeploymentConfigsInterface(namespace string, restConf *rest.Config) (v1.
 		return nil, err
 	}
 	return appsClient.DeploymentConfigs(namespace), nil
+}
+
+func GetStatefulSetsInterface(namespace string, restConf *rest.Config) (v15.StatefulSetInterface, error) {
+	appsClient, err := GetKubeAppsV1Client(restConf)
+	if err != nil {
+		return nil, err
+	}
+	return appsClient.StatefulSets(namespace), nil
 }
 
 func GetServicesInterface(namespace string, restConf *rest.Config) (v12.ServiceInterface, error) {

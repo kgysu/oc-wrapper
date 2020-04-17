@@ -104,6 +104,8 @@ func (oService OpService) Update(namespace string, restConf *rest.Config) error 
 	}
 	oService.Service.Spec.ClusterIP = toUpdate.Spec.ClusterIP
 	toUpdate.Spec = oService.Service.Spec
+	toUpdate.Name = oService.Service.Name
+	toUpdate.Labels = oService.Service.Labels
 	_, err = ServiceInterface.Update(toUpdate)
 	if err != nil {
 		return err

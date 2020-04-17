@@ -1,9 +1,10 @@
 module github.com/kgysu/oc-wrapper
 
-go 1.13
+go 1.14
 
 require (
 	github.com/davecgh/go-spew v1.1.1
+	github.com/go-git/go-git/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.3.2
 	github.com/google/gofuzz v1.1.0
@@ -14,10 +15,10 @@ require (
 	github.com/openshift/api v0.0.0-20200131223221-f2a771e1a90c
 	github.com/openshift/client-go v0.0.0-20200116152001-92a2713fa240
 	github.com/spf13/pflag v1.0.5
-	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
-	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
+	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073
+	golang.org/x/net v0.0.0-20200301022130-244492dfa37a
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
-	golang.org/x/sys v0.0.0-20191022100944-742c48ecaeb7
+	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527
 	golang.org/x/text v0.3.2
 	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
 	google.golang.org/appengine v1.5.0

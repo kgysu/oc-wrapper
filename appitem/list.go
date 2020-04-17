@@ -33,6 +33,18 @@ func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) (
 	}
 	resultItems = append(resultItems, pods...)
 
+	svas, err := ListServiceAccounts(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	resultItems = append(resultItems, svas...)
+
+	sets, err := ListStatefulSets(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	resultItems = append(resultItems, sets...)
+
 	return resultItems, nil
 }
 
@@ -97,6 +109,38 @@ func ListPods(namespace string, restConf *rest.Config, options v12.ListOptions) 
 	var resultItems []AppItem
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpPod(it))
+	}
+	return resultItems, nil
+}
+
+func ListStatefulSets(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
+	api, err := client.GetStatefulSetsInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []AppItem
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items.NewOpStatefulSet(it))
+	}
+	return resultItems, nil
+}
+
+func ListServiceAccounts(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
+	api, err := client.GetServiceAccountsInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []AppItem
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items.NewOpServiceAccount(it))
 	}
 	return resultItems, nil
 }

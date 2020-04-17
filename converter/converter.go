@@ -9,6 +9,7 @@ import (
 	templatev1 "github.com/openshift/api/template/v1"
 	"gopkg.in/yaml.v2"
 	"io"
+	v12 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -100,6 +101,24 @@ func YamlToObject(data []byte, strict bool, obj runtime.Object) (runtime.Object,
 		}
 		return resultObj, gvk, nil
 	}
+}
+
+func StatefulSetToObject(data []byte, prettyPrint bool, strict bool) (*v12.StatefulSet, error) {
+	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
+		scheme.Scheme, json.SerializerOptions{
+			Yaml:   true,
+			Pretty: prettyPrint,
+			Strict: strict,
+		})
+
+	var stf v12.StatefulSet
+	gvk := stf.GroupVersionKind()
+	_, _, err := serializer.Decode(data, &gvk, &stf)
+	if err != nil {
+		return nil, err
+	}
+
+	return &stf, nil
 }
 
 // TODO: check if needed

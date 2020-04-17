@@ -101,6 +101,8 @@ func (oRoute OpRoute) Update(namespace string, restConf *rest.Config) error {
 		return err
 	}
 	toUpdate.Spec = oRoute.Route.Spec
+	toUpdate.Labels = oRoute.Route.Labels
+	toUpdate.Name = oRoute.Route.Name
 	_, err = RouteInterface.Update(toUpdate)
 	if err != nil {
 		return err
