@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 	appsv1client "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"
+	authorizationv1client "github.com/openshift/client-go/authorization/clientset/versioned/typed/authorization/v1"
 	routev1client "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
 	kubeappsv1client "k8s.io/client-go/kubernetes/typed/apps/v1"
 	appsv1beta1client "k8s.io/client-go/kubernetes/typed/apps/v1beta1"
@@ -13,6 +14,14 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 )
+
+func GetAuthorizationV1Client(restConf *rest.Config) (*authorizationv1client.AuthorizationV1Client, error) {
+	client, err := authorizationv1client.NewForConfig(restConf)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
 
 func GetKubeAppsV1Client(restConf *rest.Config) (*kubeappsv1client.AppsV1Client, error) {
 	client, err := kubeappsv1client.NewForConfig(restConf)

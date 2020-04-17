@@ -5,11 +5,13 @@ import (
 	"github.com/kgysu/oc-wrapper/application"
 	"github.com/kgysu/oc-wrapper/items"
 	v1 "github.com/openshift/api/apps/v1"
+	v15 "github.com/openshift/api/authorization/v1"
 	v13 "github.com/openshift/api/route/v1"
 	v14 "k8s.io/api/apps/v1"
 	v12 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
@@ -27,6 +29,9 @@ func GetTemplateApp(name string) application.Application {
 			items.NewOpRoute(GetTemplateRoute(name)),
 			items.NewOpStatefulSet(GetTemplateStatefulSet(name)),
 			items.NewOpServiceAccount(GetTemplateServiceAccount(name)),
+			items.NewOpRole(GetTemplateRole(name)),
+			items.NewOpRoleBinding(GetTemplateRoleBinding(name)),
+			items.NewOpConfigMap(GetTemplateConfigMap(name)),
 		},
 	}
 }
@@ -220,5 +225,68 @@ func GetTemplateStatefulSet(name string) v14.StatefulSet {
 			},
 		},
 		Status: v14.StatefulSetStatus{},
+	}
+}
+
+func GetTemplateRole(name string) v15.Role {
+	return v15.Role{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Role",
+			APIVersion: "authorization.openshift.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        name,
+			Labels:      map[string]string{"app": name},
+			Annotations: map[string]string{"app": name},
+		},
+		Rules: []v15.PolicyRule{
+			{
+				Verbs:                 []string{"get"},
+				AttributeRestrictions: runtime.RawExtension{},
+				APIGroups:             []string{""},
+				Resources:             []string{"services"},
+			},
+		},
+	}
+}
+
+func GetTemplateRoleBinding(name string) v15.RoleBinding {
+	return v15.RoleBinding{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "RoleBinding",
+			APIVersion: "authorization.openshift.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        name,
+			Labels:      map[string]string{"app": name},
+			Annotations: map[string]string{"app": name},
+		},
+		UserNames:  []string{name},
+		GroupNames: nil,
+		Subjects: []v12.ObjectReference{
+			{
+				Kind: "ServiceAccount",
+				Name: "sa",
+			},
+		},
+		RoleRef: v12.ObjectReference{
+			Kind: "Role",
+			Name: "rolename",
+		},
+	}
+}
+
+func GetTemplateConfigMap(name string) v12.ConfigMap {
+	return v12.ConfigMap{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "ConfigMap",
+			APIVersion: "v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        name,
+			Labels:      map[string]string{"app": name},
+			Annotations: map[string]string{"app": name},
+		},
+		Data: map[string]string{"sample.file": "Some sample data."},
 	}
 }

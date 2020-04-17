@@ -201,11 +201,11 @@ func (oStatefulSet *OpStatefulSet) ToYaml() (string, error) {
 }
 
 func (oStatefulSet *OpStatefulSet) FromData(data []byte) error {
-	sfSet, err := converter.StatefulSetToObject(data, true, false)
-	if err != nil {
-		return err
-	}
-	oStatefulSet.StatefulSet = sfSet
+	//sfSet, err := converter.StatefulSetToObject(data, true, false)
+	//if err != nil {
+	//	return err
+	//}
+	//oStatefulSet.StatefulSet = sfSet
 	//_, _, err := converter.YamlToObject(data, false, oStatefulSet.StatefulSet)
 	//if err != nil {
 	//	return err

@@ -2,10 +2,10 @@ package client
 
 import (
 	v1 "github.com/openshift/client-go/apps/clientset/versioned/typed/apps/v1"
+	v16 "github.com/openshift/client-go/authorization/clientset/versioned/typed/authorization/v1"
 	v13 "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
 	v15 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	v12 "k8s.io/client-go/kubernetes/typed/core/v1"
-	v14 "k8s.io/client-go/kubernetes/typed/rbac/v1"
 	"k8s.io/client-go/rest"
 )
 
@@ -49,16 +49,32 @@ func GetRoutesInterface(namespace string, restConf *rest.Config) (v13.RouteInter
 	return routeClient.Routes(namespace), nil
 }
 
-func GetRolesInterface(namespace string, restConf *rest.Config) (v14.RoleInterface, error) {
-	rbacClient, err := GetRbacV1Client(restConf)
+//func GetRolesInterface(namespace string, restConf *rest.Config) (v14.RoleInterface, error) {
+//	rbacClient, err := GetRbacV1Client(restConf)
+//	if err != nil {
+//		return nil, err
+//	}
+//	return rbacClient.Roles(namespace), nil
+//}
+
+func GetRolesInterface(namespace string, restConf *rest.Config) (v16.RoleInterface, error) {
+	rbacClient, err := GetAuthorizationV1Client(restConf)
 	if err != nil {
 		return nil, err
 	}
 	return rbacClient.Roles(namespace), nil
 }
 
-func GetRoleBindingsInterface(namespace string, restConf *rest.Config) (v14.RoleBindingInterface, error) {
-	rbacClient, err := GetRbacV1Client(restConf)
+//func GetRoleBindingsInterface(namespace string, restConf *rest.Config) (v14.RoleBindingInterface, error) {
+//	rbacClient, err := GetRbacV1Client(restConf)
+//	if err != nil {
+//		return nil, err
+//	}
+//	return rbacClient.RoleBindings(namespace), nil
+//}
+
+func GetRoleBindingsInterface(namespace string, restConf *rest.Config) (v16.RoleBindingInterface, error) {
+	rbacClient, err := GetAuthorizationV1Client(restConf)
 	if err != nil {
 		return nil, err
 	}

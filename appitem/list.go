@@ -45,6 +45,24 @@ func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) (
 	}
 	resultItems = append(resultItems, sets...)
 
+	roles, err := ListRoles(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	resultItems = append(resultItems, roles...)
+
+	roleBindings, err := ListRoleBindings(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	resultItems = append(resultItems, roleBindings...)
+
+	configMaps, err := ListConfigMaps(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	resultItems = append(resultItems, configMaps...)
+
 	return resultItems, nil
 }
 
@@ -141,6 +159,54 @@ func ListServiceAccounts(namespace string, restConf *rest.Config, options v12.Li
 	var resultItems []AppItem
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpServiceAccount(it))
+	}
+	return resultItems, nil
+}
+
+func ListRoles(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
+	api, err := client.GetRolesInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []AppItem
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items.NewOpRole(it))
+	}
+	return resultItems, nil
+}
+
+func ListRoleBindings(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
+	api, err := client.GetRoleBindingsInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []AppItem
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items.NewOpRoleBinding(it))
+	}
+	return resultItems, nil
+}
+
+func ListConfigMaps(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
+	api, err := client.GetConfigMapsInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []AppItem
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items.NewOpConfigMap(it))
 	}
 	return resultItems, nil
 }

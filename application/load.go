@@ -63,7 +63,7 @@ func NewAppFromDisk(path, appName, namespace string) (*Application, error) {
 	for _, file := range yamlFiles {
 		item, err := appitem.NewAppItemFromFile(file, envsMap)
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Print(err.Error())
 		} else {
 			items = append(items, item)
 		}
