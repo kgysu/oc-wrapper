@@ -23,6 +23,7 @@ func GetTemplateApp(name string) application.Application {
 			items.NewOpRole(GetTemplateRole(name)),
 			items.NewOpRoleBinding(GetTemplateRoleBinding(name)),
 			items.NewOpConfigMap(GetTemplateConfigMap(name)),
+			items.NewOpPersistentVolumeClaim(GetTemplatePersistentVolumeClaim(name)),
 		},
 	}
 }

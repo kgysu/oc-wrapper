@@ -33,7 +33,7 @@ type AppItem interface {
 	FromData(data []byte) error
 }
 
-// TODO add more types
+// Hint: add more types here
 func NewAppItemFromFile(file string, envs map[string]string) (AppItem, error) {
 	if strings.HasSuffix(file, "DeploymentConfig.yaml") {
 		item := items.NewOpDeploymentConfig(v1.DeploymentConfig{})
@@ -72,6 +72,11 @@ func NewAppItemFromFile(file string, envs map[string]string) (AppItem, error) {
 	}
 	if strings.HasSuffix(file, "ConfigMap.yaml") {
 		item := items.NewOpConfigMap(v14.ConfigMap{})
+		err := item.LoadFromFile(file, envs)
+		return item, err
+	}
+	if strings.HasSuffix(file, "PersistentVolumeClaim.yaml") {
+		item := items.NewOpPersistentVolumeClaim(v14.PersistentVolumeClaim{})
 		err := item.LoadFromFile(file, envs)
 		return item, err
 	}

@@ -63,10 +63,16 @@ func ListAll(namespace string, restConf *rest.Config, options v12.ListOptions) (
 	}
 	resultItems = append(resultItems, configMaps...)
 
+	pvClaims, err := ListPersistentVolumeClaims(namespace, restConf, options)
+	if err != nil {
+		return nil, err
+	}
+	resultItems = append(resultItems, pvClaims...)
+
 	return resultItems, nil
 }
 
-// Todo add more Types
+// Hint: add more types here
 func ListDeploymentConfigs(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
 	api, err := client.GetDeploymentConfigsInterface(namespace, restConf)
 	if err != nil {
@@ -207,6 +213,22 @@ func ListConfigMaps(namespace string, restConf *rest.Config, options v12.ListOpt
 	var resultItems []AppItem
 	for _, it := range list.Items {
 		resultItems = append(resultItems, items.NewOpConfigMap(it))
+	}
+	return resultItems, nil
+}
+
+func ListPersistentVolumeClaims(namespace string, restConf *rest.Config, options v12.ListOptions) ([]AppItem, error) {
+	api, err := client.GetPersistentVolumeClaimsInterface(namespace, restConf)
+	if err != nil {
+		return nil, err
+	}
+	list, err := api.List(options)
+	if err != nil {
+		return nil, err
+	}
+	var resultItems []AppItem
+	for _, it := range list.Items {
+		resultItems = append(resultItems, items.NewOpPersistentVolumeClaim(it))
 	}
 	return resultItems, nil
 }

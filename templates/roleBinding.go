@@ -18,7 +18,7 @@ func GetTemplateRoleBinding(name string) v15.RoleBinding {
 			Annotations: map[string]string{"app": name},
 		},
 		UserNames:  []string{name},
-		GroupNames: nil,
+		GroupNames: []string{name},
 		Subjects: []v12.ObjectReference{
 			{
 				Kind: "ServiceAccount",
@@ -26,8 +26,9 @@ func GetTemplateRoleBinding(name string) v15.RoleBinding {
 			},
 		},
 		RoleRef: v12.ObjectReference{
-			Kind: "Role",
-			Name: name,
+			Kind:       "Role",
+			Name:       name,
+			APIVersion: "authorization.openshift.io/v1",
 		},
 	}
 }

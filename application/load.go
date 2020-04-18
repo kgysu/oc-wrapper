@@ -36,24 +36,22 @@ func NewAppFromDisk(path, appName, namespace string) (*Application, error) {
 		return nil, err
 	}
 
-	err = fileutils.CreateIfNotExists(envsDir)
-	if err != nil {
-		return nil, err
-	}
-
 	yamlFiles, err := fileutils.FilesInDir(appDir)
 	if err != nil {
 		return nil, err
 	}
 
-	envfiles, err := fileutils.FilesInDir(envsDir)
-	if err != nil {
-		return nil, err
+	envFiles := make([]string, 0)
+	if fileutils.ExistsFile(envsDir) {
+		envFiles, err = fileutils.FilesInDir(envsDir)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// TODO: environment specific Items
 	//envYamlFiles := filterFilesByType(envfiles, ".yaml")
-	envEnvFiles := fileutils.FilterFilesByType(envfiles, ".env")
+	envEnvFiles := fileutils.FilterFilesByType(envFiles, ".env")
 
 	envsMap, err := fileutils.EnvFilesToMap(envEnvFiles)
 	if err != nil {
