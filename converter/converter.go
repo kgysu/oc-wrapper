@@ -1,15 +1,12 @@
 package converter
 
 import (
-	jsonEncoding "encoding/json"
 	"github.com/openshift/api"
 	"github.com/openshift/api/apps"
 	v1 "github.com/openshift/api/apps/v1"
 	"github.com/openshift/api/route"
 	templatev1 "github.com/openshift/api/template/v1"
-	"gopkg.in/yaml.v2"
 	"io"
-	v12 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -103,98 +100,80 @@ func YamlToObject(data []byte, strict bool, obj runtime.Object) (runtime.Object,
 	}
 }
 
-func StatefulSetToObject(data []byte, prettyPrint bool, strict bool) (*v12.StatefulSet, error) {
-	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
-		scheme.Scheme, json.SerializerOptions{
-			Yaml:   true,
-			Pretty: prettyPrint,
-			Strict: strict,
-		})
-
-	var stf v12.StatefulSet
-	gvk := stf.GroupVersionKind()
-	_, _, err := serializer.Decode(data, &gvk, &stf)
-	if err != nil {
-		return nil, err
-	}
-
-	return &stf, nil
-}
-
 // TODO: check if needed
-func RawToObject(rawExtension runtime.RawExtension, prettyPrint bool, strict bool) (runtime.Object, *schema.GroupVersionKind, error) {
-	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
-		scheme.Scheme, json.SerializerOptions{
-			Yaml:   true,
-			Pretty: prettyPrint,
-			Strict: strict,
-		})
-
-	resultObj, gvk, err := serializer.Decode(rawExtension.Raw, nil, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return resultObj, gvk, nil
-}
-
-func RawToRealObject(rawExtension runtime.RawExtension, prettyPrint bool, strict bool, obj runtime.Object) (runtime.Object, *schema.GroupVersionKind, error) {
-	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
-		scheme.Scheme, json.SerializerOptions{
-			Yaml:   true,
-			Pretty: prettyPrint,
-			Strict: strict,
-		})
-
-	origGvk := obj.GetObjectKind().GroupVersionKind()
-	resultObj, gvk, err := serializer.Decode(rawExtension.Raw, &origGvk, obj)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return resultObj, gvk, nil
-}
-
-func InterfaceToJson(i interface{}, pretty bool) (string, error) {
-	content, err := InterfaceToJsonBytes(i, pretty)
-	if err != nil {
-		return "", err
-	}
-	return string(content), nil
-}
-
-func InterfaceToJsonBytes(i interface{}, pretty bool) ([]byte, error) {
-	if pretty {
-		return jsonEncoding.MarshalIndent(i, "", "  ")
-	}
-	return jsonEncoding.Marshal(i)
-}
-
-func InterfaceToYaml(i interface{}) (string, error) {
-	content, err := InterfaceToYamlBytes(i)
-	if err != nil {
-		return "", err
-	}
-	return string(content), nil
-}
-
-func InterfaceToYamlBytes(i interface{}) ([]byte, error) {
-	return yaml.Marshal(i)
-}
-
-func YamlToInterface(input string, i interface{}) error {
-	return YamlBytesToInterface([]byte(input), i)
-}
-
-// Does not work for Openshift Items
-func YamlBytesToInterface(input []byte, i interface{}) error {
-	return yaml.Unmarshal(input, i)
-}
-
-func JsonToInterface(input string, i interface{}) error {
-	return JsonBytesToInterface([]byte(input), i)
-}
-
-func JsonBytesToInterface(input []byte, i interface{}) error {
-	return jsonEncoding.Unmarshal(input, i)
-}
+//func RawToObject(rawExtension runtime.RawExtension, prettyPrint bool, strict bool) (runtime.Object, *schema.GroupVersionKind, error) {
+//	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
+//		scheme.Scheme, json.SerializerOptions{
+//			Yaml:   true,
+//			Pretty: prettyPrint,
+//			Strict: strict,
+//		})
+//
+//	resultObj, gvk, err := serializer.Decode(rawExtension.Raw, nil, nil)
+//	if err != nil {
+//		return nil, nil, err
+//	}
+//
+//	return resultObj, gvk, nil
+//}
+//
+//func RawToRealObject(rawExtension runtime.RawExtension, prettyPrint bool, strict bool, obj runtime.Object) (runtime.Object, *schema.GroupVersionKind, error) {
+//	serializer := json.NewSerializerWithOptions(json.DefaultMetaFactory, scheme.Scheme,
+//		scheme.Scheme, json.SerializerOptions{
+//			Yaml:   true,
+//			Pretty: prettyPrint,
+//			Strict: strict,
+//		})
+//
+//	origGvk := obj.GetObjectKind().GroupVersionKind()
+//	resultObj, gvk, err := serializer.Decode(rawExtension.Raw, &origGvk, obj)
+//	if err != nil {
+//		return nil, nil, err
+//	}
+//
+//	return resultObj, gvk, nil
+//}
+//
+//func InterfaceToJson(i interface{}, pretty bool) (string, error) {
+//	content, err := InterfaceToJsonBytes(i, pretty)
+//	if err != nil {
+//		return "", err
+//	}
+//	return string(content), nil
+//}
+//
+//func InterfaceToJsonBytes(i interface{}, pretty bool) ([]byte, error) {
+//	if pretty {
+//		return jsonEncoding.MarshalIndent(i, "", "  ")
+//	}
+//	return jsonEncoding.Marshal(i)
+//}
+//
+//func InterfaceToYaml(i interface{}) (string, error) {
+//	content, err := InterfaceToYamlBytes(i)
+//	if err != nil {
+//		return "", err
+//	}
+//	return string(content), nil
+//}
+//
+//func InterfaceToYamlBytes(i interface{}) ([]byte, error) {
+//	return yaml.Marshal(i)
+//}
+//
+//func YamlToInterface(input string, i interface{}) error {
+//	return YamlBytesToInterface([]byte(input), i)
+//}
+//
+//// Does not work for Openshift Items
+//func YamlBytesToInterface(input []byte, i interface{}) error {
+//	return yaml.Unmarshal(input, i)
+//}
+//
+//func JsonToInterface(input string, i interface{}) error {
+//	return JsonBytesToInterface([]byte(input), i)
+//}
+//
+//func JsonBytesToInterface(input []byte, i interface{}) error {
+//	return jsonEncoding.Unmarshal(input, i)
+//}

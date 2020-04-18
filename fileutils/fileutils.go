@@ -70,15 +70,6 @@ func FilterFilesByType(files []string, fileType string) []string {
 	return resultFiles
 }
 
-func GetEnvFileByName(files []string, name string) string {
-	for _, file := range files {
-		if strings.HasPrefix(file, name) {
-			return file
-		}
-	}
-	return ""
-}
-
 func EnvFilesToMap(files []string) (map[string]string, error) {
 	currentEnvs := make(map[string]string)
 	for _, envFile := range files {

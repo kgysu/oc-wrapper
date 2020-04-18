@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app: sample
+  creationTimestamp: null
+  labels:
+    app: sample
+  name: sample
+spec:
+  ports:
+  - name: basic
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: sample
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  sample.file: Some sample data.
+kind: ConfigMap
+metadata:
+  annotations:
+    app: sample
+  creationTimestamp: null
+  labels:
+    app: sample
+  name: sample

@@ -27,7 +27,7 @@ func GetTemplateRoleBinding(name string) v1.RoleBinding {
 		RoleRef: v1.RoleRef{
 			Kind:     "Role",
 			Name:     name,
-			APIGroup: "rbac.authorization.k8s.io/v1",
+			APIGroup: "rbac.authorization.k8s.io",
 		},
 	}
 }

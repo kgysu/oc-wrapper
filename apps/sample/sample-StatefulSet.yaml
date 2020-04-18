@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    app: sample
+  creationTimestamp: null
+  labels:
+    app: sample
+  name: sample
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 0
+  selector:
+    matchLabels:
+      app: sample
+  serviceName: sample
+  template:
+    metadata:
+      annotations:
+        app: sample
+      creationTimestamp: null
+      labels:
+        app: sample
+      name: sample
+    spec:
+      containers:
+      - env:
+        - name: SAMPLE
+          value: VALUE
+        image: sample:1.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 40
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: sample
+        ports:
+        - containerPort: 8080
+          name: basic
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /info
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 40
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+  updateStrategy:
+    type: RollingUpdate
+status:
+  replicas: 0

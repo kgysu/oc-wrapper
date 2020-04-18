@@ -1,0 +1,23 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    app: sample
+  creationTimestamp: null
+  labels:
+    app: sample
+  name: sample
+spec:
+  host: sample-route
+  port:
+    targetPort: 8080
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: sample
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress: null
