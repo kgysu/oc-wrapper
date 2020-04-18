@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/kgysu/oc-wrapper/items"
 	v1 "github.com/openshift/api/apps/v1"
-	v16 "github.com/openshift/api/authorization/v1"
 	v13 "github.com/openshift/api/route/v1"
 	v15 "k8s.io/api/apps/v1"
 	v14 "k8s.io/api/core/v1"
+	v17 "k8s.io/api/rbac/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 	"strings"
@@ -61,12 +61,12 @@ func NewAppItemFromFile(file string, envs map[string]string) (AppItem, error) {
 		return item, err
 	}
 	if strings.HasSuffix(file, "Role.yaml") {
-		item := items.NewOpRole(v16.Role{})
+		item := items.NewOpRole(v17.Role{})
 		err := item.LoadFromFile(file, envs)
 		return item, err
 	}
 	if strings.HasSuffix(file, "RoleBinding.yaml") {
-		item := items.NewOpRoleBinding(v16.RoleBinding{})
+		item := items.NewOpRoleBinding(v17.RoleBinding{})
 		err := item.LoadFromFile(file, envs)
 		return item, err
 	}

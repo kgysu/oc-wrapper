@@ -5,7 +5,7 @@ import (
 	"github.com/kgysu/oc-wrapper/client"
 	"github.com/kgysu/oc-wrapper/converter"
 	"github.com/kgysu/oc-wrapper/fileutils"
-	v1 "github.com/openshift/api/authorization/v1"
+	v1 "k8s.io/api/rbac/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 	"strings"
@@ -13,7 +13,7 @@ import (
 
 var OpRoleTypeMeta = v12.TypeMeta{
 	Kind:       "Role",
-	APIVersion: "authorization.openshift.io/v1",
+	APIVersion: "rbac.authorization.k8s.io/v1",
 }
 
 type OpRole struct {
