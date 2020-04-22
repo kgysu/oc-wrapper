@@ -25,6 +25,7 @@ func ReplaceEnvs(content string, envs map[string]string) string {
 }
 
 func CreateIfNotExists(folder string) error {
+	folder = filepath.FromSlash(folder)
 	if !ExistsFile(folder) {
 		err := os.Mkdir(folder, os.ModePerm)
 		if err != nil {
@@ -35,6 +36,7 @@ func CreateIfNotExists(folder string) error {
 }
 
 func ExistsFile(file string) bool {
+	file = filepath.FromSlash(file)
 	if _, err := os.Stat(file); os.IsNotExist(err) {
 		return false
 	}
@@ -46,14 +48,15 @@ func GetCurrentDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return dir, nil
+	return filepath.FromSlash(dir), nil
 }
 
 func FilePathWalkDir(root string) ([]string, error) {
+	root = filepath.FromSlash(root)
 	var files []string
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
-			files = append(files, path)
+			files = append(files, filepath.FromSlash(path))
 		}
 		return nil
 	})
@@ -93,6 +96,7 @@ func EnvFilesToMap(files []string) (map[string]string, error) {
 }
 
 func FilesInDir(root string) ([]string, error) {
+	root = filepath.FromSlash(root)
 	var resultFiles []string
 	files, err := ioutil.ReadDir(root)
 	if err != nil {
@@ -100,13 +104,14 @@ func FilesInDir(root string) ([]string, error) {
 	}
 	for _, file := range files {
 		if !file.IsDir() {
-			resultFiles = append(resultFiles, root+"/"+file.Name())
+			resultFiles = append(resultFiles, filepath.FromSlash(root+"/"+file.Name()))
 		}
 	}
 	return resultFiles, err
 }
 
 func FoldersInDir(root string) ([]string, error) {
+	root = filepath.FromSlash(root)
 	var folders []string
 	files, err := ioutil.ReadDir(root)
 	if err != nil {
@@ -114,7 +119,7 @@ func FoldersInDir(root string) ([]string, error) {
 	}
 	for _, file := range files {
 		if file.IsDir() {
-			folders = append(folders, file.Name())
+			folders = append(folders, filepath.FromSlash(file.Name()))
 		}
 	}
 	return folders, err

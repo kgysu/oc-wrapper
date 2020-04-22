@@ -7,15 +7,21 @@ import (
 	"github.com/kgysu/oc-wrapper/fileutils"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
-const gitTemp = "/gitTemp"
+const gitTemp = "gitTemp"
 
 func LoadFromGitRepo(w io.Writer, toDir, gitSubPath, gitRepoUrl, tagToClone, branchToClone string) error {
-	tempDir := toDir + gitTemp
+	err := fileutils.CreateIfNotExists(toDir + filepath.FromSlash("/"+gitSubPath))
+	if err != nil {
+		return err
+	}
+
+	tempDir := toDir + filepath.FromSlash("/") + gitTemp
 	fmt.Fprintf(w, "cloning from=[%s] to=[%s] \n", gitRepoUrl, tempDir)
-	defer os.RemoveAll(tempDir) // clean up
+	defer os.RemoveAll(filepath.FromSlash(tempDir)) // clean up
 
 	referenceToClone := plumbing.NewBranchReferenceName(branchToClone)
 	if tagToClone != "" {
@@ -43,7 +49,7 @@ func LoadFromGitRepo(w io.Writer, toDir, gitSubPath, gitRepoUrl, tagToClone, bra
 	if err != nil {
 		return err
 	}
-	os.RemoveAll(tempDir)
+	os.RemoveAll(filepath.FromSlash(tempDir)) // clean up
 	return nil
 }
 
@@ -53,8 +59,9 @@ func moveFilesFromTempToParent(w io.Writer, tempDir string) error {
 		return err
 	}
 	for _, file := range files {
-		newFilePath := strings.Replace(file, gitTemp, "", 1)
-		err := fileutils.CreateIfNotExists(getParentFolder(newFilePath))
+		newFilePath := strings.Replace(file, filepath.FromSlash("/")+gitTemp, "", 1)
+		parentDir := filepath.Dir(newFilePath)
+		err := fileutils.CreateIfNotExists(parentDir)
 		if err != nil {
 			return err
 		}
@@ -62,13 +69,7 @@ func moveFilesFromTempToParent(w io.Writer, tempDir string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Fprintf(w, "written=[%s]\n", newFilePath)
+		fmt.Fprintf(w, "written file to: [%s]\n", newFilePath)
 	}
 	return nil
-}
-
-func getParentFolder(filePath string) string {
-	splittedPath := strings.Split(filePath, "/")
-	fileName := splittedPath[len(splittedPath)-1]
-	return strings.Replace(filePath, fileName, "", 1)
 }
