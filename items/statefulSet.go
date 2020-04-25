@@ -120,7 +120,11 @@ func (oStatefulSet OpStatefulSet) UpdateScale(replicas int32, namespace string, 
 	if err != nil {
 		return err
 	}
-	toUpdate.Spec.Replicas = &replicas
+	replis := replicas
+	fmt.Println(replicas)
+	fmt.Println(replis)
+	toUpdate.Spec.Replicas = &replis
+	fmt.Println(*toUpdate.Spec.Replicas)
 	_, err = StatefulSetInterface.Update(toUpdate)
 	if err != nil {
 		return err
@@ -129,9 +133,12 @@ func (oStatefulSet OpStatefulSet) UpdateScale(replicas int32, namespace string, 
 }
 
 func (oStatefulSet OpStatefulSet) GetScale() int32 {
-	value := fmt.Sprintf("%d", oStatefulSet.StatefulSet.Spec.Replicas)
-	val, _ := strconv.ParseInt(value, 10, 32)
-	return int32(val)
+	//value := fmt.Sprintf("%d", *oStatefulSet.StatefulSet.Spec.Replicas)
+	//val, _ := strconv.ParseInt(value, 10, 32)
+	//fmt.Println(value)
+	//fmt.Println(val)
+	//return int32(val)
+	return *oStatefulSet.StatefulSet.Spec.Replicas
 }
 
 func (oStatefulSet OpStatefulSet) IsScalable() bool {
