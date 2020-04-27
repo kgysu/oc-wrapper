@@ -8,7 +8,6 @@ import (
 	v1 "k8s.io/api/apps/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
-	"strconv"
 	"strings"
 )
 
@@ -120,7 +119,8 @@ func (oStatefulSet OpStatefulSet) UpdateScale(replicas int32, namespace string, 
 	if err != nil {
 		return err
 	}
-	toUpdate.Spec.Replicas = &replicas
+	replis := replicas
+	toUpdate.Spec.Replicas = &replis
 	_, err = StatefulSetInterface.Update(toUpdate)
 	if err != nil {
 		return err
@@ -129,9 +129,7 @@ func (oStatefulSet OpStatefulSet) UpdateScale(replicas int32, namespace string, 
 }
 
 func (oStatefulSet OpStatefulSet) GetScale() int32 {
-	value := fmt.Sprintf("%d", oStatefulSet.StatefulSet.Spec.Replicas)
-	val, _ := strconv.ParseInt(value, 10, 32)
-	return int32(val)
+	return *oStatefulSet.StatefulSet.Spec.Replicas
 }
 
 func (oStatefulSet OpStatefulSet) IsScalable() bool {
@@ -150,7 +148,7 @@ func (oStatefulSet OpStatefulSet) Info() string {
 
 func (oStatefulSet OpStatefulSet) Status() string {
 	return fmt.Sprintf("%d (%d/%d/%d)",
-		oStatefulSet.StatefulSet.Spec.Replicas,
+		oStatefulSet.GetScale(),
 		oStatefulSet.StatefulSet.Status.ReadyReplicas,
 		oStatefulSet.StatefulSet.Status.CurrentReplicas,
 		oStatefulSet.StatefulSet.Status.UpdatedReplicas)
@@ -158,9 +156,7 @@ func (oStatefulSet OpStatefulSet) Status() string {
 
 func (oStatefulSet OpStatefulSet) InfoStatusHtml() string {
 	replicasStatus := "warning"
-	value := fmt.Sprintf("%d", oStatefulSet.StatefulSet.Spec.Replicas)
-	val, _ := strconv.ParseInt(value, 10, 32)
-	if int32(val) == oStatefulSet.StatefulSet.Status.ReadyReplicas {
+	if oStatefulSet.GetScale() == oStatefulSet.StatefulSet.Status.ReadyReplicas {
 		replicasStatus = "success"
 	}
 	readyStatus := "warning"
@@ -171,7 +167,7 @@ func (oStatefulSet OpStatefulSet) InfoStatusHtml() string {
 		createInfo(oStatefulSet.GetKind(), oStatefulSet.GetName()),
 		createLabelBadges(oStatefulSet.StatefulSet.Labels),
 		createStatusButton(replicasStatus, fmt.Sprint("Replicas ",
-			createBadge("light", fmt.Sprintf("%d", oStatefulSet.StatefulSet.Spec.Replicas)))),
+			createBadge("light", fmt.Sprintf("%d", oStatefulSet.GetScale())))),
 		createStatusButton(readyStatus, fmt.Sprint("Status ",
 			createBadge("light", fmt.Sprintf("(%d/%d/%d)", oStatefulSet.StatefulSet.Status.ReadyReplicas,
 				oStatefulSet.StatefulSet.Status.CurrentReplicas, oStatefulSet.StatefulSet.Status.UpdatedReplicas)))),
