@@ -28,6 +28,11 @@ func LoadFromGitRepo(w io.Writer, toDir, gitSubPath, gitRepoUrl, tagToClone, bra
 		referenceToClone = plumbing.NewTagReferenceName(tagToClone)
 	}
 
+	err = os.Mkdir(tempDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
 	// Clones the repository into the given dir, just as a normal git clone does
 	cloned, err := git.PlainClone(tempDir, false, &git.CloneOptions{
 		URL:           gitRepoUrl,
