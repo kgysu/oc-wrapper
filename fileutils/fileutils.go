@@ -27,7 +27,7 @@ func ReplaceEnvs(content string, envs map[string]string) string {
 func CreateIfNotExists(folder string) error {
 	folder = filepath.FromSlash(folder)
 	if !ExistsFile(folder) {
-		err := os.Mkdir(folder, os.ModePerm)
+		err := os.MkdirAll(folder, os.ModePerm)
 		if err != nil {
 			return err
 		}
