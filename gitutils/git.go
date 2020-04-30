@@ -21,7 +21,6 @@ func LoadFromGitRepo(w io.Writer, toDir, gitSubPath, gitRepoUrl, tagToClone, bra
 
 	tempDir := toDir + filepath.FromSlash("/") + gitTemp
 	fmt.Fprintf(w, "cloning from=[%s] to=[%s] \n", gitRepoUrl, tempDir)
-	fmt.Printf("cloning from=[%s] to=[%s] \n", gitRepoUrl, tempDir)
 	defer os.RemoveAll(filepath.FromSlash(tempDir)) // clean up
 
 	referenceToClone := plumbing.NewBranchReferenceName(branchToClone)
@@ -76,7 +75,6 @@ func moveFilesFromTempToParent(w io.Writer, tempDir string) error {
 			return err
 		}
 		fmt.Fprintf(w, "written file to: [%s]\n", newFilePath)
-		fmt.Printf("written file to: [%s]\n", newFilePath)
 	}
 	return nil
 }
